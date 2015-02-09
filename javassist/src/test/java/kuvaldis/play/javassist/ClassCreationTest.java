@@ -53,6 +53,6 @@ public class ClassCreationTest {
         FieldInfo f = new FieldInfo(cf.getConstPool(), "width", "I");
         f.setAccessFlags(AccessFlag.PUBLIC);
         cf.addField(f);
-        cf.write(new DataOutputStream(new FileOutputStream("written/kuvaldis/play/javassist/Foo.class")));
+        cf.write(new DataOutputStream(new FileOutputStream("dump/kuvaldis/play/javassist/Foo.class")));
     }
 }
