@@ -1,0 +1,4 @@
+rootProject.name = 'playground'
+
+include 'javassist'
+
