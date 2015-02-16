@@ -7,6 +7,9 @@ buildscript {
 
 allprojects {
     version = '1.0'
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+
     apply plugin: 'java'
 
     repositories {
