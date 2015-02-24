@@ -2,3 +2,5 @@ rootProject.name = 'playground'
 
 include 'javassist'
 
+include 'cglib'
+
