@@ -1,0 +1,3 @@
+dependencies {
+    compile 'net.openhft:affinity:2.2'
+}

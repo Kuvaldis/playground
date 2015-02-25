@@ -8,9 +8,9 @@ buildscript {
 allprojects {
     version = '1.0'
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-
     apply plugin: 'java'
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
 
     repositories {
         jcenter()

@@ -4,3 +4,5 @@ include 'javassist'
 
 include 'cglib'
 
+include 'affinity'
+
