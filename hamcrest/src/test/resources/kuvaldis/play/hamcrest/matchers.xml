@@ -1,0 +1,4 @@
+<matchers>
+    <!-- Custom extension -->
+    <factory class="kuvaldis.play.hamcrest.NotANumber"/>
+</matchers>

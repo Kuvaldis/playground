@@ -6,3 +6,5 @@ include 'cglib'
 
 include 'affinity'
 
+include 'hamcrest'
+
