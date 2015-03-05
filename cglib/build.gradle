@@ -1,3 +1,5 @@
 dependencies {
-    compile 'cglib:cglib:3.1'
+    compile('cglib:cglib:3.1') {
+        exclude group: 'org.ow2.asm'
+    }
 }

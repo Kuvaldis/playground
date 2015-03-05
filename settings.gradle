@@ -8,3 +8,5 @@ include 'affinity'
 
 include 'hamcrest'
 
+include 'asm'
+
