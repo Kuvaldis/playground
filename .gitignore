@@ -1,3 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
 javassist/dump/
-**.iml
+javassist/javassist.iml
+playground.iml
+zookeeper/zookeeper.iml
