@@ -10,3 +10,5 @@ include 'hamcrest'
 
 include 'asm'
 
+include 'zookeeper'
+
