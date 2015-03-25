@@ -10,23 +10,29 @@ import org.apache.curator.framework.recipes.shared.SharedValueListener;
 import org.apache.curator.framework.recipes.shared.SharedValueReader;
 import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.retry.RetryOneTime;
+import org.apache.curator.x.discovery.ServiceDiscovery;
+import org.apache.curator.x.discovery.ServiceDiscoveryBuilder;
+import org.apache.curator.x.discovery.ServiceInstance;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 
 public class Start {
 
-    private static final List<String> ALL_PROPERTIES = Arrays.asList(
+    private static final List<String> ALL_PROPERTIES = asList(
             "count", "db.url", "path.to.narnia"
     );
-    private static final List<String> SHARED_PROPERTIES = Arrays.asList(
+    private static final List<String> SHARED_PROPERTIES = asList(
             "count"
     );
     private static final String CONNECT_STRING = "localhost:2181";
@@ -38,8 +44,13 @@ public class Start {
     private static final int CONNECTION_TIMEOUT = 15000;
     private static final int SESSION_TIMEOUT = 60000;
     private static final int LOCK_TIME = 1000;
+    private static final String SERVICE_DISCOVERY_BASE_PATH = "services";
+    private static final String SERVICE_NAME = "zookeeper-play";
 
     private CuratorFramework client;
+    private ServiceInstance<UUID> serviceInstance;
+    private ServiceDiscovery<UUID> serviceDiscovery;
+    private final UUID uuid = UUID.randomUUID();
 
     public static void main(String[] args) throws IOException {
         final Start instance = new Start();
@@ -56,19 +67,22 @@ public class Start {
                 break;
             } else {
                 final String[] commandParts = command.split("[\\s]+");
-                if ("set".equals(commandParts[0])) {
+                final String commandName = commandParts[0];
+                if ("set".equals(commandName)) {
                     if (commandParts.length != 3) {
                         System.out.println(String.format("Error using command set. Should be: set <property> <value>"));
                         continue;
                     }
                     setProperty(commandParts[1], commandParts[2]);
                     System.out.println(String.format("Property '%s' is set to value '%s'", commandParts[1], commandParts[2]));
-                } else if ("get".equals(commandParts[0])) {
+                } else if ("get".equals(commandName)) {
                     if (commandParts.length != 2) {
                         System.out.println("Error using command get. Should be: get <property>");
                         continue;
                     }
                     System.out.println(String.format("Property '%s' value is '%s'", commandParts[1], getProperty(commandParts[1])));
+                } else if ("instances".equals(commandName)){
+                    printInstances();
                 } else {
                     System.out.println("Incorrect command");
                 }
@@ -76,15 +90,31 @@ public class Start {
         }
     }
 
+    private void printInstances() {
+        try {
+            final Collection<ServiceInstance<UUID>> serviceInstances = serviceDiscovery.queryForInstances(SERVICE_NAME);
+            serviceInstances.stream().forEach(this::printInstance);
+        } catch (Exception e) {
+            processException(e);
+        }
+    }
+
+    private void printInstance(final ServiceInstance<UUID> serviceInstance) {
+        System.out.println(asList(serviceInstance.getId().equals(this.serviceInstance.getId()) ? "This instance" : "Other instance",
+                "(id = ", serviceInstance.getId(), ", customUuid = ", serviceInstance.getPayload().toString(), ")").stream()
+                .collect(Collectors.joining(" ")));
+    }
+
     private void init() {
         initClient();
         initConfig();
         initListeners();
+        initDiscovery();
         checkConfigPath();
     }
 
     private void initListeners() {
-        for (String property : ALL_PROPERTIES) {
+        for (String property : SHARED_PROPERTIES) {
             final SharedValue sharedValue = new SharedValue(client, propertyPath(property), "".getBytes());
             sharedValue.getListenable().addListener(new SharedValueListener() {
                 @Override
@@ -123,6 +153,39 @@ public class Start {
         client.start();
     }
 
+    private void initDiscovery() {
+        serviceDiscovery = serviceDiscovery();
+        serviceInstance = serviceInstance();
+        try {
+            serviceDiscovery.registerService(serviceInstance);
+            serviceDiscovery.start();
+        } catch (Exception e) {
+            processException(e);
+        }
+    }
+
+    private ServiceDiscovery<UUID> serviceDiscovery() {
+        return ServiceDiscoveryBuilder.builder(UUID.class)
+                .basePath(SERVICE_DISCOVERY_BASE_PATH)
+                .client(client)
+                .build();
+    }
+
+    private ServiceInstance<UUID> serviceInstance() {
+        try {
+            return ServiceInstance.<UUID>builder()
+                    .name(SERVICE_NAME)
+                    .payload(uuid)
+                    .build();
+        } catch (Exception e) {
+            return processException(e);
+        }
+    }
+
+    private ServiceInstance<UUID> processException(Exception e) {
+        throw new RuntimeException("Something is wrong", e);
+    }
+
     private boolean configPathExists() throws Exception {
         return client.checkExists().forPath(CONFIG_FULL_PATH) != null;
     }
@@ -142,7 +205,7 @@ public class Start {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Something is wrong", e);
+            processException(e);
         } finally {
             if (lock != null) {
                 try {
@@ -163,7 +226,7 @@ public class Start {
         try {
             lookupClient.inTransaction().check().forPath(CONFIG_FULL_PATH).and().commit();
         } catch (Exception e) {
-            throw new RuntimeException("Something is wrong", e);
+            processException(e);
         }
     }
 
