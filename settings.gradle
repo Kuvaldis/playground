@@ -14,3 +14,5 @@ include 'zookeeper'
 
 include 'plexus'
 
+include 'picocontainer'
+
