@@ -1,0 +1,25 @@
+buildscript {
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE'
+    }
+}
+
+apply plugin: 'spring-boot'
+apply plugin: 'war'
+
+bootRepackage {
+    mainClass = 'kuvaldis.play.springboot.Application'
+}
+
+ext {
+    springVersion = '1.2.3.RELEASE'
+    lombokVersion = '1.16.4'
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web:$springVersion")
+
+    compile("org.projectlombok:lombok:$lombokVersion")
+
+    testCompile("org.springframework.boot:spring-boot-starter-test:$springVersion")
+}

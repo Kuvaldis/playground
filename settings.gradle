@@ -15,4 +15,5 @@ include 'zookeeper'
 include 'plexus'
 
 include 'picocontainer'
+include 'spring-boot'
 
