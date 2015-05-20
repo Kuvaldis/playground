@@ -1,0 +1,21 @@
+app:
+  name: here
+greetings:
+  name: World
+  suffix: Nice to see you in '${app.name}'
+important:
+  stuff:
+    - Chocolate
+    - Milk
+    - Buggers
+logging:
+  file: app.log
+  level:
+    org.springframework.web: DEBUG
+---
+spring:
+  profiles: kuvaldis
+greetings:
+  name: Kuvaldis
+app:
+  name: The Spring Boot Play Application

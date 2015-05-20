@@ -4,8 +4,11 @@ buildscript {
     }
 }
 
+plugins {
+    id 'war'
+    id 'nebula.provided-base' version '2.0.1'
+}
 apply plugin: 'spring-boot'
-apply plugin: 'war'
 
 bootRepackage {
     mainClass = 'kuvaldis.play.springboot.Application'
@@ -14,12 +17,16 @@ bootRepackage {
 ext {
     springVersion = '1.2.3.RELEASE'
     lombokVersion = '1.16.4'
+    h2Version = '1.4.187'
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web:$springVersion")
+    provided("org.projectlombok:lombok:$lombokVersion")
 
-    compile("org.projectlombok:lombok:$lombokVersion")
+    compile("org.springframework.boot:spring-boot-starter-web:$springVersion")
+    compile("org.springframework.boot:spring-boot-configuration-processor:$springVersion")
+
+    runtime("com.h2database:h2:$h2Version")
 
     testCompile("org.springframework.boot:spring-boot-starter-test:$springVersion")
 }
