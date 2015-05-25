@@ -19,3 +19,13 @@ greetings:
   name: Kuvaldis
 app:
   name: The Spring Boot Play Application
+---
+spring:
+  datasource:
+    url: jdbc:h2:mem:spring-boot
+    user: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
