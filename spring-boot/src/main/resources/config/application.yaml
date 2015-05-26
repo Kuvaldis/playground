@@ -34,3 +34,8 @@ spring:
 info:
   app:
     name: Spring boot playground
+management:
+  context-path: /manage
+shell.auth.simple.user:
+  name: admin
+  password: admin

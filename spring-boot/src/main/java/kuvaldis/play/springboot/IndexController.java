@@ -1,6 +1,7 @@
 package kuvaldis.play.springboot;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,9 @@ public class IndexController {
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private CounterService counterService;
+
     @RequestMapping("/")
     String home() {
         return greetingsService.greetings();
@@ -33,6 +37,7 @@ public class IndexController {
 
     @RequestMapping("/people")
     List<Person> people() {
+        counterService.increment("index.controller.people.hit");
         return personRepository.findAll();
     }
 
