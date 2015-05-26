@@ -30,6 +30,8 @@ spring:
     hibernate:
       ddl-auto: create-drop
 ---
+security.user.password: user
+---
 #actuator info
 info:
   app:
