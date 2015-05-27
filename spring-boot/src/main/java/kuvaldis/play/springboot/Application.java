@@ -1,5 +1,6 @@
 package kuvaldis.play.springboot;
 
+import kuvaldis.play.springboot.config.SecurityConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.system.ApplicationPidFileWriter;
@@ -12,16 +13,17 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 @Slf4j
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
 @EnableConfigurationProperties(ImportantConfig.class)
-@EnableGlobalMethodSecurity // enables security for controller methods with default password on start.
 public class Application {
 
     public static void main(String[] args) {

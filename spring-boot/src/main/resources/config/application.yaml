@@ -30,7 +30,7 @@ spring:
     hibernate:
       ddl-auto: create-drop
 ---
-security.user.password: user
+#security.basic.enabled: false
 ---
 #actuator info
 info:
