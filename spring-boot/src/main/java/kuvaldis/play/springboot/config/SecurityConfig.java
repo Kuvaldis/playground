@@ -24,7 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Configuration
-@EnableGlobalMethodSecurity(securedEnabled = true) // enables security for controller methods with default password on start.
+@EnableGlobalMethodSecurity(securedEnabled = true)
+// it actually removes security for actuator paths
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
