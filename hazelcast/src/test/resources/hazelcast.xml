@@ -1,0 +1,17 @@
+<hazelcast>
+    <network>
+        <join>
+            <multicast enabled="false"></multicast>
+            <tcp-ip enabled="true">
+                <member>127.0.0.1</member>
+            </tcp-ip>
+        </join>
+    </network>
+
+    <map name="storage-map">
+        <map-store enabled="true">
+            <class-name>kuvaldis.play.hazelcast.PersonMapStore</class-name>
+            <write-delay-seconds>1</write-delay-seconds>
+        </map-store>
+    </map>
+</hazelcast>

@@ -1,0 +1,3 @@
+dependencies {
+    compile 'com.hazelcast:hazelcast-all:3.4.2'
+}
