@@ -5,7 +5,7 @@ import com.hazelcast.core.MapStore;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PersonMapStore implements MapStore<Long, String> {
+public class LongStringMapStore implements MapStore<Long, String> {
 
     public static final Map<Long, String> storage = new HashMap<>();
     public static final List<String> events = new ArrayList<>();

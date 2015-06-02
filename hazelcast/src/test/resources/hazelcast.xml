@@ -10,8 +10,12 @@
 
     <map name="storage-map">
         <map-store enabled="true">
-            <class-name>kuvaldis.play.hazelcast.PersonMapStore</class-name>
+            <class-name>kuvaldis.play.hazelcast.LongStringMapStore</class-name>
             <write-delay-seconds>1</write-delay-seconds>
         </map-store>
     </map>
+
+    <queue name="bounded-queue">
+        <max-size>3</max-size>
+    </queue>
 </hazelcast>
