@@ -4,8 +4,11 @@ import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.core.*;
 import com.hazelcast.mapreduce.Job;
+import com.hazelcast.mapreduce.JobCompletableFuture;
 import com.hazelcast.mapreduce.JobTracker;
 import com.hazelcast.mapreduce.KeyValueSource;
+import com.hazelcast.mapreduce.aggregation.Aggregations;
+import com.hazelcast.mapreduce.aggregation.Supplier;
 import com.hazelcast.query.EntryObject;
 import com.hazelcast.query.Predicate;
 import com.hazelcast.query.PredicateBuilder;
@@ -269,7 +272,7 @@ public class HelloHazelcast {
         people.put("Angelica", "Angelica likes Paul");
         KeyValueSource<String, String> source = KeyValueSource.fromMap(people);
         Job<String, String> job = jobTracker.newJob(source);
-        ICompletableFuture<Map<String, Long>> future = job.mapper(new TokenizerMapper())
+        JobCompletableFuture<Map<String, Long>> future = job.mapper(new TokenizerMapper())
                 .keyPredicate((key) -> !"Montgomery".equals(key))
                 .combiner(new WordCountCombinerFactory())
                 .reducer(new WordCountReducerFactory())
@@ -282,5 +285,16 @@ public class HelloHazelcast {
         assertEquals(1l, result.get("Peter").longValue());
         assertEquals(2l, result.get("likes").longValue());
         // ... bla bla bla
+    }
+
+    @Test
+    public void testAggregation() throws Exception {
+        final HazelcastInstance instance = Hazelcast.newHazelcastInstance();
+        final IMap<Integer, Integer> integers = instance.getMap("integers");
+        for (int i = 1; i < 8; i++) {
+            integers.put(i, i);
+        }
+        final Integer avg = integers.aggregate(Supplier.all(), Aggregations.integerAvg());
+        assertEquals(4, avg.intValue());
     }
 }
