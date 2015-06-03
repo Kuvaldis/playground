@@ -3,10 +3,16 @@ package kuvaldis.play.hazelcast;
 import com.hazelcast.client.HazelcastClient;
 import com.hazelcast.client.config.ClientConfig;
 import com.hazelcast.core.*;
+import com.hazelcast.mapreduce.Job;
+import com.hazelcast.mapreduce.JobTracker;
+import com.hazelcast.mapreduce.KeyValueSource;
 import com.hazelcast.query.EntryObject;
 import com.hazelcast.query.Predicate;
 import com.hazelcast.query.PredicateBuilder;
 import com.hazelcast.query.SqlPredicate;
+import kuvaldis.play.hazelcast.mapreduce.TokenizerMapper;
+import kuvaldis.play.hazelcast.mapreduce.WordCountCombinerFactory;
+import kuvaldis.play.hazelcast.mapreduce.WordCountReducerFactory;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -250,5 +256,31 @@ public class HelloHazelcast {
         final Collection<Person> sqlFoundPeople = people.values(sqlPredicate);
         assertEquals(1, sqlFoundPeople.size());
         assertEquals("Rob", sqlFoundPeople.iterator().next().getName());
+    }
+
+    @Test
+    public void testMapReduce() throws Exception {
+        final HazelcastInstance instance = Hazelcast.newHazelcastInstance();
+        final JobTracker jobTracker = instance.getJobTracker("articles");
+        final IMap<String, String> people = instance.getMap("people");
+        people.put("Paul", "Paul is a student");
+        people.put("Peter", "Peter likes to play guitar");
+        people.put("Montgomery", "Monty is an evel");
+        people.put("Angelica", "Angelica likes Paul");
+        KeyValueSource<String, String> source = KeyValueSource.fromMap(people);
+        Job<String, String> job = jobTracker.newJob(source);
+        ICompletableFuture<Map<String, Long>> future = job.mapper(new TokenizerMapper())
+                .keyPredicate((key) -> !"Montgomery".equals(key))
+                .combiner(new WordCountCombinerFactory())
+                .reducer(new WordCountReducerFactory())
+                .submit(); // also with collator to have some calculatoin on reduced values. like how many unique words etc.
+        final Map<String, Long> result = future.get();
+        assertEquals(2l, result.get("Paul").longValue());
+        assertEquals(1l, result.get("is").longValue());
+        assertEquals(1l, result.get("a").longValue());
+        assertEquals(1l, result.get("student").longValue());
+        assertEquals(1l, result.get("Peter").longValue());
+        assertEquals(2l, result.get("likes").longValue());
+        // ... bla bla bla
     }
 }
