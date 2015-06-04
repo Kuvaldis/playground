@@ -43,4 +43,58 @@ public class FeatureTest {
         // no key with hash code 3, so can't find the value
         assertEquals(null, hashMap.get(pair));
     }
+
+    @Test
+    public void testWaitNotify() throws Exception {
+        final boolean[] canConsume = new boolean[2];
+        final Object lock = new Object();
+
+        final Thread t1 = new Thread(() -> {
+            synchronized (lock) {
+                try {
+                    while (!canConsume[0]) {
+                        System.out.println("before wait first");
+                        lock.wait();
+                        System.out.println("after wait first");
+                    }
+                    System.out.println("can consume first");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        final Thread t2 = new Thread(() -> {
+            synchronized (lock) {
+                try {
+                    while (!canConsume[1]) {
+                        System.out.println("before wait second");
+                        lock.wait();
+                        System.out.println("after wait second");
+                    }
+                    System.out.println("can consume second");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        t1.start();
+        t2.start();
+
+        new Thread() {
+            @Override
+            public void run() {
+                synchronized (lock) {
+                    canConsume[0] = true;
+                    lock.notifyAll();
+                    System.out.println("first released");
+                    canConsume[1] = true;
+                    lock.notifyAll();
+                    System.out.println("second released");
+                }
+            }
+        }.start();
+
+        t1.join();
+        t2.join();
+    }
 }
