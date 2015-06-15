@@ -13,6 +13,8 @@ import com.hazelcast.query.EntryObject;
 import com.hazelcast.query.Predicate;
 import com.hazelcast.query.PredicateBuilder;
 import com.hazelcast.query.SqlPredicate;
+import com.hazelcast.transaction.TransactionContext;
+import com.hazelcast.transaction.TransactionOptions;
 import kuvaldis.play.hazelcast.mapreduce.TokenizerMapper;
 import kuvaldis.play.hazelcast.mapreduce.WordCountCombinerFactory;
 import kuvaldis.play.hazelcast.mapreduce.WordCountReducerFactory;
@@ -29,7 +31,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.copyOf;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class HelloHazelcast {
@@ -296,5 +300,28 @@ public class HelloHazelcast {
         }
         final Integer avg = integers.aggregate(Supplier.all(), Aggregations.integerAvg());
         assertEquals(4, avg.intValue());
+    }
+
+    @Test
+    public void testTransaction() throws Exception {
+        final HazelcastInstance instance = Hazelcast.newHazelcastInstance();
+        final IMap<String, String> map = instance.getMap("map");
+        // local is actually makes two-phased commit, and two-phased distribute transaction logs before commit
+        // isolation is always repeatable read
+        final TransactionOptions transactionOptions =
+                new TransactionOptions().setTransactionType(TransactionOptions.TransactionType.LOCAL);
+        final TransactionContext transactionContext = instance.newTransactionContext(transactionOptions);
+        transactionContext.beginTransaction();
+        try {
+            final TransactionalMap<String, String> transactionalMap = transactionContext.getMap("map");
+            transactionalMap.put("1", "a");
+            transactionalMap.put("2", "b");
+            assertTrue(map.isEmpty());
+            assertEquals(2, transactionalMap.size());
+            transactionContext.commitTransaction();
+        } catch (Throwable t) {
+            transactionContext.rollbackTransaction();
+        }
+        assertEquals(2, map.size());
     }
 }
