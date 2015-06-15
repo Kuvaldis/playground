@@ -17,5 +17,5 @@ include 'plexus'
 include 'picocontainer'
 include 'spring-boot'
 include 'hazelcast'
-include 'java'
+include 'java-features'
 
