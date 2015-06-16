@@ -18,4 +18,5 @@ include 'picocontainer'
 include 'spring-boot'
 include 'hazelcast'
 include 'java-features'
+include 'gpars'
 
