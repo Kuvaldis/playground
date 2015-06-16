@@ -8,7 +8,7 @@ import java.util.concurrent.CountDownLatch
 
 import static groovyx.gpars.actor.Actors.actor
 
-class ActorsSpec extends Specification {
+class ActorSpec extends Specification {
 
     def "hello world" () {
         given:

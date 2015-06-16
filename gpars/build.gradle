@@ -3,6 +3,7 @@ apply plugin: 'groovy'
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.3'
     compile 'org.codehaus.gpars:gpars:1.2.1'
+    compile 'org.codehaus.jsr166-mirror:jsr166:1.7.0'
 
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
 }
