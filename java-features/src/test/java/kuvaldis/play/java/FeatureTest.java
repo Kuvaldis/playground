@@ -3,8 +3,11 @@ package kuvaldis.play.java;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 public class FeatureTest {
 
@@ -96,5 +99,33 @@ public class FeatureTest {
 
         t1.join();
         t2.join();
+    }
+
+    @Test
+    public void testOptionalChain() throws Exception {
+        class A {
+        }
+        class B {
+            private A a;
+            public A getA() {
+                return a;
+            }
+        }
+        class C {
+            private B b;
+            public B getB() {
+                return b;
+            }
+        }
+        final A a = new A();
+        final B b = new B();
+        final C c = new C();
+        b.a = a;
+        c.b = b;
+        assertSame(a, Optional.ofNullable(c).map(C::getB).map(B::getA).orElse(null));
+        b.a = null;
+        assertNull(Optional.ofNullable(c).map(C::getB).map(B::getA).orElse(null));
+        final C nullC = null;
+        assertNull(Optional.ofNullable(nullC).map(C::getB).map(B::getA).orElse(null));
     }
 }
