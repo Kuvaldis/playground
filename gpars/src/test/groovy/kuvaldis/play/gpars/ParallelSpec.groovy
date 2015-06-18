@@ -1,5 +1,6 @@
 package kuvaldis.play.gpars
 
+import groovyx.gpars.AsyncFun
 import groovyx.gpars.GParsExecutorsPool
 import groovyx.gpars.GParsExecutorsPoolEnhancer
 import groovyx.gpars.GParsPool
@@ -105,4 +106,57 @@ class ParallelSpec extends Specification {
         [0, 1, 2, 3, 4, 5, 6, 7] as Set == calls as Set
     }
 
+    def "combine example"() {
+        given:
+        final phrase = "I wouldn't have worn this hat if I had had another hat"
+        when:
+        final result = GParsPool.withPool {
+            phrase.split(' ').parallel
+                    .map { [it, 1] }
+                    .combine(0) { sum, value -> sum + value }.getParallel()
+                    .filter { it.value > 1 }
+                    .sort { -it.value }
+                    .collection
+                    .collectEntries { [it.key, it.value] }
+        }
+        then:
+        ['I': 2, 'had': 2, 'hat': 2] == result as Map
+    }
+
+    final class Helper {
+        def minusOne(value) {
+            value - 1
+        }
+        @AsyncFun
+        def divideThree = {
+            it / 3
+        }
+    }
+
+    def "async functions composition"() {
+        given:
+        final value = 5
+        when:
+        final promise = GParsPool.withPool {
+            final helper = new Helper()
+            final multiply = { it * 2 }.asyncFun()
+            final minusOne = helper.&minusOne.asyncFun()
+            helper.divideThree(minusOne(multiply(value)))
+        }
+        then:
+        3 == promise.get()
+    }
+
+    def "speculate check"() {
+        given:
+        final alternative1 = { 'victory' }
+        final alternative2 = { sleep(1000) }
+        final alternative3 = { throw new RuntimeException() }
+        when:
+        final result = GParsPool.withPool(3) {
+            GParsPool.speculate([alternative1, alternative2, alternative3])
+        }
+        then:
+        'victory' == result
+    }
 }
