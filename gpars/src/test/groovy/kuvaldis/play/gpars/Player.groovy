@@ -11,7 +11,7 @@ class Player extends DefaultActor {
 
     void act() {
         loop {
-            gameMaster.send guess
+            gameMaster << guess
             react {
                 switch (it) {
                     case 'too large': answer.value = 'too large'; break
