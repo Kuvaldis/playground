@@ -118,6 +118,8 @@ class ActorSpec extends Specification {
         actor << 10
         actor << 20
         actor << 30
+        actor << 40
+        actor << 50
         and:
         actor.join()
         then:
