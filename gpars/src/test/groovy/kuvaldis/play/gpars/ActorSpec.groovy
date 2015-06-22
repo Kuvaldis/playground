@@ -66,7 +66,6 @@ class ActorSpec extends Specification {
         final receiverActor = actor {
             react {
                 sender << 'Go away'
-                terminate()
             }
         }
         final senderActor = actor {
@@ -76,7 +75,6 @@ class ActorSpec extends Specification {
                     case 'Go away': result.value = 'Fuck you!'; break
                     default: result.value = 'Great!'
                 }
-                terminate()
             }
         }
         when:
