@@ -1,16 +1,15 @@
 package kuvaldis.play.gpars
 
-import org.codehaus.groovy.ast.ClassNode
-import org.spockframework.compiler.model.Spec
+import groovyx.gpars.actor.DefaultActor
 import spock.lang.Specification
 
-import java.util.concurrent.CountDownLatch
+import java.util.concurrent.ThreadLocalRandom
 
 import static groovyx.gpars.actor.Actors.actor
 
 class ActorSpec extends Specification {
 
-    def "hello world" () {
+    def "hello world"() {
         given:
         def decryptedMessage;
         final decryptor = actor {
@@ -32,5 +31,31 @@ class ActorSpec extends Specification {
         [decryptor, console]*.join()
         then:
         'Hello, World!' == decryptedMessage
+    }
+
+    def "yet another actors example from manual"() {
+        given:
+        final answerHolder = [value: null]
+        final gameMaster = new GameMaster(secretNumber: 5)
+        final largePlayer = new Player(gameMaster: gameMaster, guess: 7, answer: answerHolder)
+        final smallPlayer = new Player(gameMaster: gameMaster, guess: 3, answer: answerHolder)
+        final winner = new Player(gameMaster: gameMaster, guess: 5, answer: answerHolder)
+        when:
+        gameMaster.start()
+        and:
+        largePlayer.start()
+        largePlayer.join()
+        then:
+        'too large' == answerHolder.value
+        when:
+        smallPlayer.start()
+        smallPlayer.join()
+        then:
+        'too small' == answerHolder.value
+        when:
+        winner.start()
+        winner.join()
+        then:
+        'you win' == answerHolder.value
     }
 }
