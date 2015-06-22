@@ -1,10 +1,10 @@
 package kuvaldis.play.gpars
 
+import groovyx.gpars.dataflow.Dataflow
 import groovyx.gpars.dataflow.SyncDataflowQueue
 import groovyx.gpars.group.DefaultPGroup
 import groovyx.gpars.scheduler.ResizeablePool
 import spock.lang.Specification
-
 
 class CSPSpec extends Specification {
 
@@ -46,10 +46,10 @@ class CSPSpec extends Specification {
 
     def "composition test"() {
         given:
+        final group = new DefaultPGroup(new ResizeablePool(true))
         final names = new SyncDataflowQueue<String>()
         final formattedNames = new SyncDataflowQueue<String>()
         final greetedNames = new SyncDataflowQueue<String>()
-        final group = new DefaultPGroup(new ResizeablePool(true))
         when:
         group.task {
             final name = names.val
@@ -64,5 +64,27 @@ class CSPSpec extends Specification {
         names << "Pipin"
         then:
         "Hello PIPIN" == greetedNames.val
+    }
+
+    def "select can return either first or second alternative"() {
+        given:
+        final group = new DefaultPGroup(new ResizeablePool(true))
+        final input1 = new SyncDataflowQueue<String>()
+        final input2 = new SyncDataflowQueue<String>()
+        final output = new SyncDataflowQueue<String>()
+        final incoming = Dataflow.select([input1, input2])
+        when:
+        group.task {
+            final message = incoming.select()
+            output << message.value.toUpperCase()
+        }
+        and:
+        input1 << "Me"
+        input2 << "Willy"
+        // non deterministic result
+        final result = output.val
+        then:
+        println result
+        "ME" == result || "WILLY" == result
     }
 }
