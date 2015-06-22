@@ -1,5 +1,6 @@
 package kuvaldis.play.gpars
 
+import groovyx.gpars.actor.Actors
 import groovyx.gpars.actor.DefaultActor
 import spock.lang.Specification
 
@@ -57,5 +58,30 @@ class ActorSpec extends Specification {
         winner.join()
         then:
         'you win' == answerHolder.value
+    }
+
+    def "sender test" () {
+        given:
+        final result = [value: '']
+        final receiverActor = actor {
+            react {
+                sender << 'Go away'
+                terminate()
+            }
+        }
+        final senderActor = actor {
+            receiverActor << 'Hi!'
+            react {
+                switch (it) {
+                    case 'Go away': result.value = 'Fuck you!'; break
+                    default: result.value = 'Great!'
+                }
+                terminate()
+            }
+        }
+        when:
+        [senderActor, receiverActor]*.join()
+        then:
+        'Fuck you!' == result.value
     }
 }
