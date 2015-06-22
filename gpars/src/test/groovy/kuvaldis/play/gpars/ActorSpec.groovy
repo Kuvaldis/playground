@@ -7,6 +7,7 @@ import spock.lang.Specification
 import java.util.concurrent.ThreadLocalRandom
 
 import static groovyx.gpars.actor.Actors.actor
+import static groovyx.gpars.actor.Actors.reactor
 
 class ActorSpec extends Specification {
 
@@ -60,7 +61,7 @@ class ActorSpec extends Specification {
         'you win' == answerHolder.value
     }
 
-    def "sender test" () {
+    def "sender test"() {
         given:
         final result = [value: '']
         final receiverActor = actor {
@@ -81,5 +82,45 @@ class ActorSpec extends Specification {
         [senderActor, receiverActor]*.join()
         then:
         'Fuck you!' == result.value
+    }
+
+    def "loop times test"() {
+        given:
+        def max;
+        final actor = actor {
+            final candidates = []
+            loop(3) { max = candidates.max() } {
+                react {
+                    candidates << it
+                }
+            }
+        }
+        when:
+        actor << 10
+        actor << 20
+        actor << 30
+        and:
+        actor.join()
+        then:
+        30 == max
+    }
+
+    def "loop until test"() {
+        given:
+        def max;
+        final actor = actor {
+            final candidates = []
+            loop { candidates.max() < 30 } { max = candidates.max() } {
+                react { candidates << it }
+            }
+        }
+        when:
+        actor << 10
+        actor << 20
+        actor << 30
+        and:
+        actor.join()
+        then:
+        30 == max
     }
 }
