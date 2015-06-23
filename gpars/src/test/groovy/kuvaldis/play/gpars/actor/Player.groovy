@@ -1,4 +1,4 @@
-package kuvaldis.play.gpars
+package kuvaldis.play.gpars.actor
 
 import groovyx.gpars.actor.Actor
 import groovyx.gpars.actor.DefaultActor

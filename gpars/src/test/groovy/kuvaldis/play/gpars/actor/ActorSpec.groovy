@@ -1,13 +1,8 @@
-package kuvaldis.play.gpars
+package kuvaldis.play.gpars.actor
 
-import groovyx.gpars.actor.Actors
-import groovyx.gpars.actor.DefaultActor
 import spock.lang.Specification
 
-import java.util.concurrent.ThreadLocalRandom
-
 import static groovyx.gpars.actor.Actors.actor
-import static groovyx.gpars.actor.Actors.reactor
 
 class ActorSpec extends Specification {
 
@@ -124,5 +119,27 @@ class ActorSpec extends Specification {
         actor.join()
         then:
         30 == max
+    }
+
+    def "dynamic dispatch actor test"() {
+        given:
+        final dda = new CustomDDA().become {
+            when { Long aLong -> values << 'Long' }
+            when { BigDecimal bigDecimal -> values << 'BigDecimal' }
+        }
+        when:
+        dda.start()
+        and:
+        actor {
+            dda << 'Hello'
+            dda << 10
+            dda << 10l
+            dda << (10 as BigDecimal)
+            dda << new CustomDDA.Kill()
+            dda.join()
+        }.join()
+        then:
+        ['String', 'Integer', 'Kill', 'Long', 'BigDecimal'] as Set == dda.values
+
     }
 }
