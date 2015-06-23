@@ -1,5 +1,7 @@
 package kuvaldis.play.gpars.actor
 
+import groovyx.gpars.activeobject.ActiveObjectRegistry
+import groovyx.gpars.group.DefaultPGroup
 import spock.lang.Specification
 
 import static groovyx.gpars.actor.Actors.actor
@@ -140,6 +142,15 @@ class ActorSpec extends Specification {
         }.join()
         then:
         ['String', 'Integer', 'Kill', 'Long', 'BigDecimal'] as Set == dda.values
+    }
 
+    def "active object with group test"() {
+        given:
+        ActiveObjectRegistry.instance.register("group", new DefaultPGroup(10))
+        final decryptor = new DecryptorActiveObject()
+        when:
+        final promise = decryptor.decrypt('!dlroW ,olleH')
+        then:
+        'Hello, World!' == promise.get()
     }
 }
