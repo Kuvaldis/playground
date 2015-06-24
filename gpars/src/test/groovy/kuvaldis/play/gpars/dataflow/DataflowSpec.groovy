@@ -168,4 +168,29 @@ class DataflowSpec extends Specification {
         then:
         200 == result.val
     }
+
+    def "select test"() {
+        given:
+        final a = new DataflowVariable<Integer>()
+        final b = new DataflowVariable<Integer>()
+        final c = new DataflowQueue<Integer>()
+        final select = Dataflow.select([a, b, c])
+        when:
+        task {
+            sleep 1000
+            a << 10
+        }
+        and:
+        task {
+            sleep 1000
+            b << 20
+        }
+        and:
+        task {
+            sleep 1000
+            c << 30
+        }
+        then:
+        println select().value
+    }
 }
