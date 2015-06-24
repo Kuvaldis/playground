@@ -89,4 +89,83 @@ class DataflowSpec extends Specification {
         then:
         [1, 2, 3] == [result.val, result.val, result.val]
     }
+
+    def "bind data flow variable methods test"() {
+        given:
+        final isBound = new DataflowVariable<Boolean>();
+        and:
+        final a = new DataflowVariable<Integer>()
+        a >> {
+            isBound << true
+        }
+        when:
+        a << 1
+        then:
+        isBound.val
+    }
+
+    def "chain variables test"() {
+        given:
+        final result = new DataflowVariable<Integer>()
+        and:
+        final var = new DataflowVariable<Integer>()
+        var >> { it * 2 } >> { it + 1 } >> { result << it }
+        when:
+        var << 4
+        then:
+        9 == result.val
+    }
+
+    def "variable exception handling test"() {
+        given:
+        final var = new DataflowVariable<Integer>()
+        and:
+        final chain = var >> { it * 2 } >> { 1 / it }
+        and:
+        final result = chain.then({ "Passed" }, { "Failed" })
+        when:
+        var << 0
+        then:
+        "Failed" == result.val
+    }
+
+    def "fork and join test"() {
+        given:
+        final values = new DataflowVariable<List<Integer>>()
+        when:
+        task {
+            2
+        }.thenForkAndJoin({ it**2 }, { it**3 }, { it**4 }, { it**5 }).then({ values << it }).join()
+        then:
+        [4, 8, 16, 32] == values.val
+    }
+
+    def "lazy task test"() {
+        given:
+        def attempts = 0
+        final lazyTask = Dataflow.lazyTask { attempts++ }
+        when:
+        lazyTask.get()
+        and:
+        lazyTask.get()
+        then:
+        attempts == 1
+    }
+
+    def "data flow variable calculation"() {
+        given:
+        final initialDistance = new DataflowVariable<Integer>()
+        final acceleration = new DataflowVariable<Integer>()
+        final time = new DataflowVariable<Integer>()
+        when:
+        task {
+            initialDistance << 100
+            acceleration << 2
+            time << 10
+        }
+        and:
+        final result = initialDistance + acceleration * 0.5 * time**2
+        then:
+        200 == result.val
+    }
 }
