@@ -1,9 +1,12 @@
 package kuvaldis.play.vtdxml;
 
 import com.ximpleware.*;
+import com.ximpleware.extended.VTDGenHuge;
+import com.ximpleware.extended.VTDNavHuge;
+import com.ximpleware.extended.XMLMemMappedBuffer;
 import org.junit.Test;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
@@ -85,7 +88,40 @@ public class VtdTest {
 //        assertEquals("val", attr);
     }
 
-    private void createInput2Index() throws IOException, IndexWriteException {
+    @Test
+    public void testHugeFile() throws Exception {
+        final String fileName = "xml/inputHuge.xml";
+        createHugeFile(fileName);
+        XMLMemMappedBuffer xb = new XMLMemMappedBuffer();
+        VTDGenHuge vg = new VTDGenHuge();
+        xb.readFile(fileName);
+        vg.setDoc(xb);
+        vg.parse(true);
+        VTDNavHuge vn = vg.getNav();
+        // it doesn't fail with out of memory only if heap size is at least the same as huge file size.
+        // Though VTDGenHuge.MEM_MAPPED should provide some way without loading so much data into memory.
+//        final VTDGenHuge gen = new VTDGenHuge();
+//        assertTrue(gen.parseFile(fileName, false, VTDGenHuge.MEM_MAPPED));
+    }
+
+    private void createHugeFile(final String name) throws Exception {
+        final File file = new File(name);
+        if (file.exists()) {
+            return;
+        }
+        if (!file.createNewFile()) {
+            throw new Exception();
+        }
+        final Writer writer = new BufferedWriter(new FileWriter(file));
+        writer.append("<a>");
+        for (int i = 0; i < 200000000; i++) {
+            writer.append("<b>Hello, World!</b>");
+        }
+        writer.append("</a>");
+        writer.close();
+    }
+
+    private void createInput2Index() throws Exception {
         final VTDGen gen = new VTDGen();
         if (gen.parseFile("xml/input2.xml", false)) {
             gen.writeIndex(INPUT2_INDEX_FILE_NAME);

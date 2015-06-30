@@ -1,3 +1,7 @@
+test {
+    maxHeapSize = "2048m"
+}
+
 dependencies {
     testCompile 'com.ximpleware:vtd-xml:2.11'
 }
