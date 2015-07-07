@@ -21,4 +21,5 @@ include 'java-features'
 include 'gpars'
 include 'atomikos'
 include 'vtd-xml'
+include 'jca'
 
