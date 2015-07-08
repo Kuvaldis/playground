@@ -1,12 +1,31 @@
 package kuvaldis.play.jca;
 
+import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.X509v1CertificateBuilder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
+import org.bouncycastle.crypto.params.RSAKeyParameters;
+import org.bouncycastle.crypto.util.SubjectPublicKeyInfoFactory;
+import org.bouncycastle.jcajce.PKCS12StoreParameter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.junit.Test;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.math.BigInteger;
+import java.nio.file.Paths;
 import java.security.*;
+import java.security.cert.Certificate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -99,6 +118,74 @@ public class JcaTest {
 
         assertArrayEquals(aliceSecretKey, bobSecretKey);
         assertArrayEquals(aliceSecretKey, carolSecretKey);
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @Test
+    public void testKeyStoreCertificate() throws Exception {
+        Security.addProvider(new BouncyCastleProvider());
+
+        final String keyStoreFileName = "keyStore";
+        final File keyStoreFile = Paths.get(keyStoreFileName).toFile();
+        if (keyStoreFile.exists()) {
+            keyStoreFile.delete();
+        }
+
+        final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", "BC");
+        generator.initialize(1024);
+        final KeyPair keyPair = generator.generateKeyPair();
+
+        keyStoreFile.createNewFile();
+        final KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        final char[] password = "123456".toCharArray();
+        final PrivateKey privateKey = keyPair.getPrivate();
+        final PublicKey publicKey = keyPair.getPublic();
+        final Certificate certificate = createSelfSignedCertificate(privateKey, publicKey);
+        certificate.verify(publicKey);
+
+        final Signature signature = Signature.getInstance("SHA1withRSA");
+        signature.initSign(privateKey);
+        signature.update("1".getBytes());
+        final byte[] digitalSignature = signature.sign();
+
+        keyStore.load(null);
+        keyStore.setCertificateEntry("cert", certificate);
+        keyStore.store(new FileOutputStream(keyStoreFileName), password);
+
+        final KeyStore readKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        readKeyStore.load(new FileInputStream(keyStoreFileName), password);
+        final Certificate readCertificate = readKeyStore.getCertificate("cert");
+        readCertificate.verify(publicKey);
+        final Signature readSignature = Signature.getInstance("SHA1withRSA");
+        readSignature.initVerify(readCertificate);
+        readSignature.update("1".getBytes());
+        assertTrue(readSignature.verify(digitalSignature));
+    }
+
+    private Certificate createSelfSignedCertificate(final PrivateKey privateKey, final PublicKey publicKey) throws IOException, OperatorCreationException, java.security.cert.CertificateException {
+        final Date startDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+        final Date endDate = Date.from(LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
+        final SubjectPublicKeyInfo info = new SubjectPublicKeyInfo(ASN1Sequence.getInstance(publicKey.getEncoded()));
+        final X509v1CertificateBuilder builder = new X509v1CertificateBuilder(
+                new X500Name("CN=Test"),
+                BigInteger.ONE,
+                startDate, endDate,
+                new X500Name("CN=Test"),
+                info
+        );
+        // might be some parameters etc.
+        final X509CertificateHolder certificateHolder = builder.build(new JcaContentSignerBuilder("SHA1withRSA").setProvider("BC").build(privateKey));
+        return new JcaX509CertificateConverter().setProvider("BC").getCertificate(certificateHolder);
+    }
+
+    // just for example
+    private OutputStream saveCertificate(final Certificate certificate) throws IOException {
+        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        final JcaPEMWriter jcaPEMWriter = new JcaPEMWriter(new OutputStreamWriter(stream));
+        jcaPEMWriter.writeObject(certificate);
+        jcaPEMWriter.flush();
+        jcaPEMWriter.close();
+        return stream;
     }
 
     private void encodeDecodeCheck(String algorithm, byte[] key) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
