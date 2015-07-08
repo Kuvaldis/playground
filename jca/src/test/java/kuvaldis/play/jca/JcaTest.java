@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.nio.file.Paths;
 import java.security.*;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -126,21 +127,20 @@ public class JcaTest {
         Security.addProvider(new BouncyCastleProvider());
 
         final String keyStoreFileName = "keyStore";
-        final File keyStoreFile = Paths.get(keyStoreFileName).toFile();
-        if (keyStoreFile.exists()) {
-            keyStoreFile.delete();
-        }
+        final String certificateFileName = "certificate";
 
         final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", "BC");
         generator.initialize(1024);
         final KeyPair keyPair = generator.generateKeyPair();
 
-        keyStoreFile.createNewFile();
         final KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         final char[] password = "123456".toCharArray();
         final PrivateKey privateKey = keyPair.getPrivate();
         final PublicKey publicKey = keyPair.getPublic();
-        final Certificate certificate = createSelfSignedCertificate(privateKey, publicKey);
+        createSelfSignedCertificateInFile(certificateFileName, privateKey, publicKey);
+
+        final CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509", "BC");
+        final Certificate certificate = certificateFactory.generateCertificate(new FileInputStream(certificateFileName));
         certificate.verify(publicKey);
 
         final Signature signature = Signature.getInstance("SHA1withRSA");
@@ -162,7 +162,8 @@ public class JcaTest {
         assertTrue(readSignature.verify(digitalSignature));
     }
 
-    private Certificate createSelfSignedCertificate(final PrivateKey privateKey, final PublicKey publicKey) throws IOException, OperatorCreationException, java.security.cert.CertificateException {
+    // in case we already had certificate data in the file we'd be able to read it from
+    private void createSelfSignedCertificateInFile(final String certificateFileName, final PrivateKey privateKey, final PublicKey publicKey) throws IOException, OperatorCreationException, java.security.cert.CertificateException {
         final Date startDate = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
         final Date endDate = Date.from(LocalDateTime.now().plusDays(1).atZone(ZoneId.systemDefault()).toInstant());
         final SubjectPublicKeyInfo info = new SubjectPublicKeyInfo(ASN1Sequence.getInstance(publicKey.getEncoded()));
@@ -175,17 +176,15 @@ public class JcaTest {
         );
         // might be some parameters etc.
         final X509CertificateHolder certificateHolder = builder.build(new JcaContentSignerBuilder("SHA1withRSA").setProvider("BC").build(privateKey));
-        return new JcaX509CertificateConverter().setProvider("BC").getCertificate(certificateHolder);
+        saveCertificate(certificateFileName, new JcaX509CertificateConverter ().setProvider("BC").getCertificate(certificateHolder));
     }
 
     // just for example
-    private OutputStream saveCertificate(final Certificate certificate) throws IOException {
-        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        final JcaPEMWriter jcaPEMWriter = new JcaPEMWriter(new OutputStreamWriter(stream));
+    private void saveCertificate(final String certificateFileName, final Certificate certificate) throws IOException {
+        final JcaPEMWriter jcaPEMWriter = new JcaPEMWriter(new FileWriter(certificateFileName));
         jcaPEMWriter.writeObject(certificate);
         jcaPEMWriter.flush();
         jcaPEMWriter.close();
-        return stream;
     }
 
     private void encodeDecodeCheck(String algorithm, byte[] key) throws UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
