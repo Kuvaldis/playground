@@ -13,7 +13,8 @@
     <citrus:schema-repository id="schemaRepository"/>
 
     <citrus:global-variables>
-        <citrus:variable name="project.name" value="Citrus Integration Tests Play"/>
+        <citrus:variable name="projectName" value="Citrus Integration Tests Play"/>
+        <citrus:variable name="userName" value="Kuvaldis"/>
     </citrus:global-variables>
 
 </beans>

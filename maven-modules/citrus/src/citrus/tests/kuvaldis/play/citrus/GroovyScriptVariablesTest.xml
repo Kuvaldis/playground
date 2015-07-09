@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+
+
+                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+    <testcase name="GroovyScriptVariablesTest">
+        <variables>
+            <variable name="fivePlusFive">
+                <value>
+                    <script type="groovy">
+                        <![CDATA[
+                        5 + 5
+                        ]]>
+                    </script>
+                </value>
+            </variable>
+            <variable name="arrayDoubleSum">
+                <value>
+                    <script type="groovy">
+                        <![CDATA[
+                        [1, 2, 3].collect { it * 2 }.sum()
+                        ]]>
+                    </script>
+                </value>
+            </variable>
+        </variables>
+        <actions>
+            <echo>
+                <message>fivePlusFive: ${fivePlusFive}</message>
+            </echo>
+            <echo>
+                <message>arrayDoubleSum: ${arrayDoubleSum}</message>
+            </echo>
+        </actions>
+    </testcase>
+</spring:beans>

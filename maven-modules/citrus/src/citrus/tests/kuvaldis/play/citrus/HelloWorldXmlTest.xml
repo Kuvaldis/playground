@@ -7,26 +7,23 @@
 
                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
-    <testcase name="SampleXmlTest">
+    <testcase name="HelloWorldXmlTest">
         <meta-info>
-            <author>Citrus</author>
-            <creationdate>2013-01-01</creationdate>
-            <status>DRAFT</status>
-            <last-updated-by>Citrus</last-updated-by>
-            <last-updated-on>2013-01-01T00:00:00</last-updated-on>
+            <author>Kuvaldis</author>
+            <creationdate>2015-07-10</creationdate>
+            <status>FINAL</status>
         </meta-info>
-
-        <description>This is a sample Citrus integration test</description>
-
+        <description>
+            Hello World Test Case!
+        </description>
         <variables>
-            <variable name="now" value="citrus:currentDate()"/>
+            <variable name="text" value="Hello, World!"/>
         </variables>
-
         <actions>
             <echo>
-                <message>Today is: ${now}</message>
+                <message>${text}</message>
             </echo>
         </actions>
-
     </testcase>
+
 </spring:beans>
