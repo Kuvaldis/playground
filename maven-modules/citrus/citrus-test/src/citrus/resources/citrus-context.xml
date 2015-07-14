@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd">
+
+    <!-- Common settings -->
+    <context:property-placeholder location="classpath:citrus.properties"/>
+
+    <citrus:schema-repository id="schemaRepository"/>
+
+    <citrus:global-variables>
+        <citrus:variable name="projectName" value="Citrus Integration Tests Play"/>
+        <citrus:variable name="userName" value="Kuvaldis"/>
+    </citrus:global-variables>
+
+    <bean id="plainTextMessageValidator"
+          class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
+
+    <citrus-http:client id="helloHttpClient"
+                        request-url="http://localhost:4567/hello"
+                        request-method="GET"
+                        content-type="application/json"
+                        timeout="60000"/>
+
+    <citrus-http:server id="helloHttpServer"
+                        port="4568"
+                        auto-start="true"
+                        resource-base="src/citrus/resources"
+                        timeout="60000"/>
+
+</beans>

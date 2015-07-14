@@ -1,14 +1,14 @@
 package kuvaldis.play.citrus;
 
-import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.dsl.JUnit4CitrusTestBuilder;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.RawMessage;
 import org.junit.Test;
+import org.springframework.http.HttpMethod;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -40,6 +40,24 @@ public class HelloWorldTest extends JUnit4CitrusTestBuilder {
     @Test
     @CitrusXmlTest(name = "GroovyScriptVariablesTest")
     public void testGroovyScript() throws Exception {
+    }
+
+    // run kuvaldis.play.citrus.HttpServer before
+    @Test
+    @CitrusTest(name = "SendMessageTest")
+    public void testSendHttpClientMessageTest() throws Exception {
+
+        description("Send Message Basic Test");
+
+        variables().add("name", "Http");
+
+        send("helloHttpClient").header("Header-Name", "${name}");
+//        receive("helloHttpServer").http().uri("/greet").method(HttpMethod.GET);
+//        send("helloHttpServer").http().payload("Hello");
+        receive("helloHttpClient")
+                // this is validation actually
+                .messageType(MessageType.PLAINTEXT)
+                .payload("Hello, Http!");
     }
 
     @Test

@@ -4,101 +4,26 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>maven-modules</artifactId>
-        <groupId>kuvaldis-play</groupId>
+        <groupId>kuvaldis.play</groupId>
         <version>1.0</version>
     </parent>
 
-    <groupId>kuvaldis.play</groupId>
     <artifactId>citrus</artifactId>
     <version>1.0</version>
-    <name>Citrus Integration Test Play</name>
+    <name>Citrus Integration Play</name>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>citrus-test</module>
+        <module>citrus-http-helper</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <citrus.version>2.2</citrus.version>
-        <slf4j.version>1.7.7</slf4j.version>
-        <junit.version>4.12</junit.version>
     </properties>
 
-    <dependencies>
-        <!-- Citrus -->
-        <dependency>
-            <groupId>com.consol.citrus</groupId>
-            <artifactId>citrus-core</artifactId>
-            <version>${citrus.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.consol.citrus</groupId>
-            <artifactId>citrus-java-dsl</artifactId>
-            <version>${citrus.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.consol.citrus</groupId>
-            <artifactId>citrus-jms</artifactId>
-            <version>${citrus.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.consol.citrus</groupId>
-            <artifactId>citrus-ws</artifactId>
-            <version>${citrus.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.consol.citrus</groupId>
-            <artifactId>citrus-http</artifactId>
-            <version>${citrus.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-    </dependencies>
-
     <build>
-        <testSourceDirectory>src/citrus/java</testSourceDirectory>
-        <testResources>
-            <testResource>
-                <directory>src/citrus/resources</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-                <filtering>true</filtering>
-            </testResource>
-            <testResource>
-                <directory>src/citrus/tests</directory>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </testResource>
-        </testResources>
-
         <plugins>
-            <plugin>
-                <groupId>com.consol.citrus.mvn</groupId>
-                <artifactId>citrus-maven-plugin</artifactId>
-                <version>${citrus.version}</version>
-                <configuration>
-                    <targetPackage>kuvaldis.play.citrus</targetPackage>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
@@ -108,83 +33,6 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18.1</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>citrus-integration-tests</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <skip>false</skip>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>consol-labs-release</id>
-            <url>http://labs.consol.de/maven/repository/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-            </releases>
-        </repository>
-        <repository>
-            <id>consol-labs-snapshots</id>
-            <url>http://labs.consol.de/maven/snapshots-repository/</url>
-            <snapshots>
-                <!-- Policy: always, daily, interval:xxx (xxx=#minutes, 60*24*7=10080), never -->
-                <updatePolicy>interval:10080</updatePolicy>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <name>Maven Plugin Repository</name>
-            <url>http://repo1.maven.org/maven2</url>
-            <layout>default</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-        </pluginRepository>
-        <pluginRepository>
-            <id>consol-labs-release</id>
-            <url>http://labs.consol.de/maven/repository/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-            </releases>
-        </pluginRepository>
-        <pluginRepository>
-            <id>consol-labs-snapshots</id>
-            <url>http://labs.consol.de/maven/snapshots-repository/</url>
-            <snapshots>
-                <updatePolicy>interval:10080</updatePolicy>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
 </project>
