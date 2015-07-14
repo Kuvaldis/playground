@@ -51,13 +51,12 @@ public class HelloWorldTest extends JUnit4CitrusTestBuilder {
 
         variables().add("name", "Http");
 
-        send("helloHttpClient").header("Header-Name", "${name}");
-//        receive("helloHttpServer").http().uri("/greet").method(HttpMethod.GET);
-//        send("helloHttpServer").http().payload("Hello");
-        receive("helloHttpClient")
-                // this is validation actually
-                .messageType(MessageType.PLAINTEXT)
-                .payload("Hello, Http!");
+        parallel(
+                send("helloHttpClient").header("Header-Name", "${name}"),
+                sequential(receive("helloHttpServer").http().uri("/greet").method(HttpMethod.GET),
+                        send("helloHttpServer").payload("Hello")),
+                receive("helloHttpClient") /* this is validation actually*/.messageType(MessageType.PLAINTEXT).payload("Hello, Http!")
+        );
     }
 
     @Test

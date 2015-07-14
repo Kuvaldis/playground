@@ -31,7 +31,7 @@
     <citrus-http:server id="helloHttpServer"
                         port="4568"
                         auto-start="true"
-                        resource-base="src/citrus/resources"
-                        timeout="60000"/>
+                        resource-base="src/citrus/resources"/>
+
 
 </beans>
