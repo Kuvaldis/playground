@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ItemWriteListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.annotation.BeforeStep;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -78,6 +80,23 @@ public class HelloWorldBatchConfiguration {
     @Qualifier("additionWriter")
     public ListItemWriter<Integer> additionWriter() {
         return new ListItemWriter<>();
+        // you can save all the items like this, add ExecutionContextPromotionListener with the same key
+        // to the first (addition) step and then retrieve it from stepExecution.getJobExecution().getExecutionContext().get("someKey")
+//        return new ItemWriter<Integer>() {
+//
+//            private StepExecution stepExecution;
+//
+//            @Override
+//            public void write(List<? extends Integer> items) throws Exception {
+//                ExecutionContext stepContext = this.stepExecution.getExecutionContext();
+//                stepContext.put("someKey", someObject);
+//            }
+//
+//            @BeforeStep
+//            public void saveStepExecution(StepExecution stepExecution) {
+//                this.stepExecution = stepExecution;
+//            }
+//        };
     }
 
     @Bean
@@ -136,6 +155,7 @@ public class HelloWorldBatchConfiguration {
                 .build();
     }
 
+    // or we can use composite item processor
     @Bean
     public Job operationsJob(final Step addition, final Step multiplication) {
         return jobBuilderFactory.get("operationsJob")
