@@ -16,6 +16,9 @@ import org.springframework.batch.core.listener.ItemListenerSupport;
 import org.springframework.batch.item.*;
 import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.batch.item.support.ListItemWriter;
+import org.springframework.batch.item.validator.ValidatingItemProcessor;
+import org.springframework.batch.item.validator.ValidationException;
+import org.springframework.batch.item.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -111,7 +114,9 @@ public class HelloWorldBatchConfiguration {
         return new ItemListenerSupport<Integer, Integer>() {
             @Override
             public void afterProcess(Integer item, Integer result) {
-                additionOutput.add(result);
+                if (result != null) {
+                    additionOutput.add(result);
+                }
                 log.info(item.toString());
             }
         };
@@ -133,11 +138,24 @@ public class HelloWorldBatchConfiguration {
     public Step addition(final @Qualifier("additionReader") ItemReader<Integer> additionReader,
                          final @Qualifier("additionWriter") ItemWriter<Integer> additionWriter,
                          final @Qualifier("additionWriterListener") ItemWriteListener<Integer> additionWriterListener) {
+        final ValidatingItemProcessor<Integer> validatingItemProcessor = new ValidatingItemProcessor<Integer>() {
+            @Override
+            public Integer process(Integer item) throws ValidationException {
+                final Integer result = super.process(item);
+                return result == null ? null : result + 1;
+            }
+        };
+        validatingItemProcessor.setValidator(value -> {
+            if (value % 2 != 0) {
+                throw new ValidationException("Only even");
+            }
+        });
+        validatingItemProcessor.setFilter(true);
         return stepBuilderFactory.get("addition")
                 .<Integer, Integer>chunk(2)
                 .listener(additionWriterListener)
                 .reader(additionReader)
-                .processor(item -> item + 1)
+                .processor(validatingItemProcessor)
                 .writer(additionWriter)
                 .build();
     }
