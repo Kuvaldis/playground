@@ -1,6 +1,5 @@
 package kuvaldis.play.springbatch.person;
 
-import org.h2.jdbcx.JdbcDataSource;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
