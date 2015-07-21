@@ -23,4 +23,5 @@ include 'atomikos'
 include 'vtd-xml'
 include 'jca'
 include 'spring-batch'
+include 'http'
 
