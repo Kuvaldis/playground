@@ -1,23 +1,21 @@
 package kuvaldis.play.http;
 
-import kuvaldis.play.http.mapper.ResponseCode;
-import kuvaldis.play.http.mapper.UriProcessor;
 import kuvaldis.play.http.mapper.UriProcessorMap;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Locale;
 import java.util.Optional;
+
+import static kuvaldis.play.http.mapper.StandardResponses.*;
 
 public class RequestProcessor {
 
     private final BufferedReader reader;
     private final BufferedWriter writer;
-
-    private static final Response BAD_REQUEST = new Response(ResponseCode.BAD_REQUEST);
-    private static final Response NOT_FOUND = new Response(ResponseCode.NOT_FOUND);
-    private static final Response INTERNAL_ERROR = new Response(ResponseCode.INTERNAL_ERROR);
 
     public RequestProcessor(BufferedReader reader, BufferedWriter writer) {
         this.reader = reader;
@@ -27,8 +25,9 @@ public class RequestProcessor {
     public void process() throws Exception {
         System.out.println("Process request...");
         try {
-            final Optional<Request> dataOptional = parseRequest(reader);
-            final Response response = dataOptional.map(this::processRequest).orElse(BAD_REQUEST);
+            final Optional<Request> requestOptional = parseRequest(reader);
+            final Response response = requestOptional.map(this::processRequest).orElse(BAD_REQUEST);
+            logResult(requestOptional, response);
             writeResponse(response);
         } catch (final Exception e) {
             e.printStackTrace();
@@ -39,12 +38,18 @@ public class RequestProcessor {
         }
     }
 
+    private void logResult(final Optional<Request> requestOptional, final Response response) {
+        System.out.println(requestOptional.map((request) -> request.getMethod() + " request to " +
+                request.getUri() + " from " + request.getHost())
+                .orElse("Empty request") + " processed with response status " + response.getStatus().getCode());
+    }
+
     private Optional<Request> parseRequest(final BufferedReader reader) throws IOException {
         final String requestLine = reader.readLine();
         if (requestLine == null || requestLine.isEmpty()) {
             return Optional.empty();
         }
-        //        todo read other stuff
+        //        todo read other stuff like headers or body
 //        String s;
 //        while ((s = reader.readLine()) != null && !s.isEmpty()) {
 //            writer.append(s);
@@ -66,13 +71,15 @@ public class RequestProcessor {
     private void writeResponse(final Response response) throws IOException {
         writer.write("HTTP/1.1 " + response.getStatus().getCode() + " " + response.getStatus().getDescription());
         writer.newLine();
-//        writer.write("HTTP/1.1 200 OK\r\n");
-        writer.write("Date: Fri, 31 Dec 1999 23:59:59 GMT\r\n");
-        writer.write("Server: Apache/0.8.4\r\n");
-        writer.write("Content-Type: text/html\r\n");
-        writer.write("Content-Length: 0\r\n");
-        writer.write("Expires: Sat, 01 Jan 2000 00:59:59 GMT\r\n");
-        writer.write("Last-modified: Fri, 09 Aug 1996 14:21:40 GMT\r\n");
-        writer.write("\r\n");
+        writer.write("Date: " + new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zz", Locale.ENGLISH).format(Instant.now().toEpochMilli()));
+        writer.newLine();
+        writer.write("Server: Test/0.0.1");
+        writer.newLine();
+        writer.write("Content-Type: " + response.getContentType());
+        writer.newLine();
+        writer.write("Content-Length: " + response.getBody().getBytes("UTF-8").length);
+        writer.newLine();
+        writer.newLine();
+        writer.write(response.getBody());
     }
 }

@@ -12,6 +12,7 @@ public final class ResponseCode {
         this.description = description;
     }
 
+    public static final ResponseCode OK = new ResponseCode(200, "OK");
     public static final ResponseCode BAD_REQUEST = new ResponseCode(400, "Bad Request");
     public static final ResponseCode NOT_FOUND = new ResponseCode(404, "Not Found");
     public static final ResponseCode INTERNAL_ERROR = new ResponseCode(500, "Internal Server Error");

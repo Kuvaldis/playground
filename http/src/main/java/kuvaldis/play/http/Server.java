@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 
 public class Server {
 
-    private static Integer PORT_NUMBER = 8080;
+    private static final Integer PORT_NUMBER = 8080;
 
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
 

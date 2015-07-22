@@ -1,4 +1,4 @@
-package kuvaldis.play.http.mapper;
+package kuvaldis.play.http.mapper.processor;
 
 import kuvaldis.play.http.Request;
 import kuvaldis.play.http.Response;
