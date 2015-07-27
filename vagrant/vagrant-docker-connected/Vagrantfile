@@ -1,0 +1,30 @@
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'docker'
+ 
+Vagrant.configure("2") do |config|
+ 
+  config.vm.define "vertxdev-server" do |a|
+    a.vm.provider "docker" do |d|
+      d.image = "vertxdev:latest"
+      d.ports = ["8080:8080"]
+      d.name = "vertxdev-server"
+      d.remains_running = true
+      d.cmd = ["vertx", "run", "vertx-examples/src/raw/java/httphelloworld/HelloWorldServer.java"]
+      d.volumes = ["/src/vertx/:/usr/local/src"]
+      d.vagrant_machine = "dockerhost"
+      d.vagrant_vagrantfile = "./DockerHostVagrantfile"
+    end
+  end
+ 
+  config.vm.define "vertxdev-client" do |a|
+    a.vm.provider "docker" do |d|
+      d.image = "vertxdev:latest"
+      d.name = "vertxdev-client"
+      d.link("vertxdev-server:vertxdev-server")
+      d.remains_running = false
+      d.cmd = ["wget","-qO", "-","--save-headers","http://vertxdev-server:8080"]
+      d.vagrant_machine = "dockerhost"
+      d.vagrant_vagrantfile = "./DockerHostVagrantfile"
+    end
+  end
+ 
+end
