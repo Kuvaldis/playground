@@ -12,7 +12,7 @@ public class DbCreate {
 
     public static void main(String[] args) throws Exception {
         final JdbcDataSource dataSource = new JdbcDataSource();
-        dataSource.setUrl("jdbc:h2:./jooq/library");
+        dataSource.setUrl("jdbc:h2:./library");
         dataSource.setUser("sa");
         dataSource.setPassword("");
         final URL resource = DbCreate.class.getClassLoader().getResource("setup.sql");

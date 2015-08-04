@@ -1,10 +1,51 @@
-ext {
-    jooqVersion = '3.6.2'
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'nu.studer:gradle-jooq-plugin:1.0.5'
+        classpath 'com.h2database:h2:1.4.187'
+    }
+    configurations.classpath {
+        resolutionStrategy {
+            forcedModules = [
+                    "org.jooq:jooq:3.6.2",
+                    "org.jooq:jooq-meta:3.6.2",
+                    "org.jooq:jooq-codegen:3.6.2"
+            ]
+        }
+    }
+}
+
+apply plugin: 'nu.studer.jooq'
+
+jooq {
+    library(sourceSets.main) {
+        jdbc {
+            driver = 'org.h2.Driver'
+            url = 'jdbc:h2:./library'
+            user = 'sa'
+            password = ''
+        }
+        generator {
+            name = 'org.jooq.util.DefaultGenerator'
+            database {
+                name = 'org.jooq.util.h2.H2Database'
+                inputSchema = ''
+                includes = '.*'
+                excludes = ''
+            }
+            target {
+                packageName = 'kuvaldis.play.jooq.generated'
+                directory = 'src/generated/jooq'
+            }
+        }
+    }
 }
 
 dependencies {
     compile 'com.h2database:h2:1.4.187'
-    compile "org.jooq:jooq:$jooqVersion"
-    compile "org.jooq:jooq-meta:$jooqVersion"
-    compile "org.jooq:jooq-codegen1:$jooqVersion"
+    compile "org.jooq:jooq:3.6.2"
+    compile "org.jooq:jooq-meta:3.6.2"
+    compile "org.jooq:jooq-codegen:3.6.2"
 }

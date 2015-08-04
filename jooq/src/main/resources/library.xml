@@ -3,7 +3,7 @@
     <!-- Configure the database connection here -->
     <jdbc>
         <driver>org.h2.Driver</driver>
-        <url>jdbc:h2:mem:library</url>
+        <url>jdbc:h2:./library</url>
         <user>sa</user>
         <password></password>
     </jdbc>
@@ -20,7 +20,7 @@
 
             <!-- The database schema (or in the absence of schema support, in your RDBMS this
                  can be the owner, user, database name) to be generated -->
-            <inputSchema>library</inputSchema>
+            <inputSchema></inputSchema>
 
             <!-- All elements that are generated from your schema
                  (A Java regular expression. Use the pipe to separate several expressions)
@@ -38,7 +38,7 @@
             <packageName>kuvaldis.play.jooq.generated</packageName>
 
             <!-- The destination directory of your generated classes -->
-            <directory>..</directory>
+            <directory>./src</directory>
         </target>
     </generator>
 </configuration>
