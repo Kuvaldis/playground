@@ -1,16 +1,20 @@
+CREATE TABLE author (
+  id              NUMBER(7)     NOT NULL PRIMARY KEY,
+  first_name      VARCHAR2(50),
+  last_name       VARCHAR2(50)  NOT NULL
+--   date_of_birth   DATE,
+--   year_of_birth   NUMBER(7),
+--   distinguished   NUMBER(1)
+);
+
+INSERT INTO author(id, first_name, last_name)
+VALUES (1, 'Howard', 'Lovecraft'), (2, 'Mark', 'Twain'), (3, 'Stephen', 'King')
+;
+
 CREATE TABLE language (
   id              NUMBER(7)     NOT NULL PRIMARY KEY,
   cd              CHAR(2)       NOT NULL,
   description     VARCHAR2(50)
-);
-
-CREATE TABLE author (
-  id              NUMBER(7)     NOT NULL PRIMARY KEY,
-  first_name      VARCHAR2(50),
-  last_name       VARCHAR2(50)  NOT NULL,
-  date_of_birth   DATE,
-  year_of_birth   NUMBER(7),
-  distinguished   NUMBER(1)
 );
 
 CREATE TABLE book (
