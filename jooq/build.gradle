@@ -1,4 +1,10 @@
+ext {
+    jooqVersion = '3.6.2'
+}
+
 dependencies {
-    testCompile 'com.h2database:h2:1.4.187'
-    testCompile 'org.jooq:jooq:3.6.2'
+    compile 'com.h2database:h2:1.4.187'
+    compile "org.jooq:jooq:$jooqVersion"
+    compile "org.jooq:jooq-meta:$jooqVersion"
+    compile "org.jooq:jooq-codegen1:$jooqVersion"
 }
