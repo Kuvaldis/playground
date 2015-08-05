@@ -1,5 +1,6 @@
 package kuvaldis.play.jooq;
 
+import kuvaldis.play.jooq.generated.public_.tables.Book;
 import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import java.sql.Connection;
 
 import static junit.framework.Assert.assertEquals;
 import static kuvaldis.play.jooq.generated.public_.tables.Author.AUTHOR;
+import static kuvaldis.play.jooq.generated.public_.tables.Book.BOOK;
 import static org.jooq.impl.DSL.concat;
 import static org.jooq.impl.DSL.trim;
 
@@ -16,7 +18,7 @@ public class JooqTest {
     @Test
     public void testAuthorsList() throws Exception {
         final DSLContext context = DbUtils.context();
-        final Result<Record> result = context.select().from(AUTHOR).fetch();
+        final Result<Record> result = context.select().from(AUTHOR).limit(3).fetch();
 
         System.out.println(result);
 
@@ -47,5 +49,17 @@ public class JooqTest {
                 .fetch();
         final Record1<String> thirdRecord = result.get(2);
         assertEquals("StephenKing", thirdRecord.value1());
+    }
+
+    @Test
+    public void testWhere() throws Exception {
+        final DSLContext context = DbUtils.context();
+        final Result<Record> result = context.select()
+                .from(BOOK)
+                .where(BOOK.TITLE.like("Animal%"))
+                .fetch();
+        assertEquals(1, result.size());
+        final Record record = result.get(0);
+        assertEquals(2, record.getValue(BOOK.ID).intValue());
     }
 }

@@ -1,15 +1,11 @@
 CREATE TABLE author (
   id              NUMBER(7)     NOT NULL PRIMARY KEY,
   first_name      VARCHAR2(50),
-  last_name       VARCHAR2(50)  NOT NULL
---   date_of_birth   DATE,
---   year_of_birth   NUMBER(7),
---   distinguished   NUMBER(1)
+  last_name       VARCHAR2(50)  NOT NULL,
+  date_of_birth   DATE,
+  year_of_birth   NUMBER(7),
+  distinguished   NUMBER(1)
 );
-
-INSERT INTO author(id, first_name, last_name)
-VALUES (1, 'Howard', 'Lovecraft'), (2, 'Mark', 'Twain'), (3, 'Stephen', 'King')
-;
 
 CREATE TABLE language (
   id              NUMBER(7)     NOT NULL PRIMARY KEY,
@@ -42,29 +38,33 @@ CREATE TABLE book_to_book_store (
   CONSTRAINT fk_b2bs_book       FOREIGN KEY (book_id)     REFERENCES book (id)         ON DELETE CASCADE
 );
 
--- INSERT INTO language (id, cd, description) VALUES (1, 'en', 'English');
--- INSERT INTO language (id, cd, description) VALUES (2, 'de', 'Deutsch');
--- INSERT INTO language (id, cd, description) VALUES (3, 'fr', 'Fran?ais');
--- INSERT INTO language (id, cd, description) VALUES (4, 'pt', 'Portugu?s');
---
--- INSERT INTO author (id, first_name, last_name, date_of_birth    , year_of_birth)
---   VALUES           (1 , 'George'  , 'Orwell' , DATE '1903-06-26', 1903         );
--- INSERT INTO author (id, first_name, last_name, date_of_birth    , year_of_birth)
---   VALUES           (2 , 'Paulo'   , 'Coelho' , DATE '1947-08-24', 1947         );
---
--- INSERT INTO book (id, author_id, title         , published_in, language_id)
---   VALUES         (1 , 1        , '1984'        , 1948        , 1          );
--- INSERT INTO book (id, author_id, title         , published_in, language_id)
---   VALUES         (2 , 1        , 'Animal Farm' , 1945        , 1          );
--- INSERT INTO book (id, author_id, title         , published_in, language_id)
---   VALUES         (3 , 2        , 'O Alquimista', 1988        , 4          );
--- INSERT INTO book (id, author_id, title         , published_in, language_id)
---   VALUES         (4 , 2        , 'Brida'       , 1990        , 2          );
---
+INSERT INTO language (id, cd, description) VALUES (1, 'en', 'English');
+INSERT INTO language (id, cd, description) VALUES (2, 'de', 'Deutsch');
+INSERT INTO language (id, cd, description) VALUES (3, 'fr', 'Fran?ais');
+INSERT INTO language (id, cd, description) VALUES (4, 'pt', 'Portugu?s');
+
+INSERT INTO author (id, first_name, last_name  , date_of_birth    , year_of_birth)
+  VALUES           (1,  'Howard'  , 'Lovecraft', DATE '1890-08-20', 1890         ),
+                   (2,  'Mark'    , 'Twain'    , DATE '1871-02-07', 1871         ),
+                   (3,  'Stephen' , 'King'     , DATE '1947-09-21', 1947         );
+INSERT INTO author (id, first_name, last_name  , date_of_birth    , year_of_birth)
+  VALUES           (4 , 'George'  , 'Orwell'   , DATE '1903-06-26', 1903         );
+INSERT INTO author (id, first_name, last_name  , date_of_birth    , year_of_birth)
+  VALUES           (5 , 'Paulo'   , 'Coelho'   , DATE '1947-08-24', 1947         );
+
+INSERT INTO book (id, author_id, title         , published_in, language_id)
+  VALUES         (1 , 1        , '1984'        , 1948        , 1          );
+INSERT INTO book (id, author_id, title         , published_in, language_id)
+  VALUES         (2 , 1        , 'Animal Farm' , 1945        , 1          );
+INSERT INTO book (id, author_id, title         , published_in, language_id)
+  VALUES         (3 , 2        , 'O Alquimista', 1988        , 4          );
+INSERT INTO book (id, author_id, title         , published_in, language_id)
+  VALUES         (4 , 2        , 'Brida'       , 1990        , 2          );
+
 -- INSERT INTO book_store VALUES ('Orell F?ssli');
 -- INSERT INTO book_store VALUES ('Ex Libris');
 -- INSERT INTO book_store VALUES ('Buchhandlung im Volkshaus');
---
+
 -- INSERT INTO t_book_to_book_store VALUES ('Orell F?ssli'             , 1, 10);
 -- INSERT INTO t_book_to_book_store VALUES ('Orell F?ssli'             , 2, 10);
 -- INSERT INTO t_book_to_book_store VALUES ('Orell F?ssli'             , 3, 10);
