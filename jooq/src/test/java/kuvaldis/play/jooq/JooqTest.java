@@ -1,9 +1,6 @@
 package kuvaldis.play.jooq;
 
-import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.Result;
-import org.jooq.SQLDialect;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.junit.Test;
 
@@ -11,14 +8,15 @@ import java.sql.Connection;
 
 import static junit.framework.Assert.assertEquals;
 import static kuvaldis.play.jooq.generated.public_.tables.Author.AUTHOR;
+import static org.jooq.impl.DSL.concat;
+import static org.jooq.impl.DSL.trim;
 
-public class HelloWorldTest {
+public class JooqTest {
 
     @Test
     public void testAuthorsList() throws Exception {
-        final Connection connection = DbUtils.getConnection();
-        final DSLContext create = DSL.using(connection, SQLDialect.H2);
-        final Result<Record> result = create.select().from(AUTHOR).fetch();
+        final DSLContext context = DbUtils.context();
+        final Result<Record> result = context.select().from(AUTHOR).fetch();
 
         System.out.println(result);
 
@@ -38,5 +36,16 @@ public class HelloWorldTest {
         assertEquals(3, thirdRecord.getValue(AUTHOR.ID).intValue());
         assertEquals("Stephen", thirdRecord.getValue(AUTHOR.FIRST_NAME));
         assertEquals("King", thirdRecord.getValue(AUTHOR.LAST_NAME));
+    }
+
+    @Test
+    public void testConcatAndTrim() throws Exception {
+        final DSLContext context = DbUtils.context();
+        final Result<Record1<String>> result = context
+                .select(concat(trim(AUTHOR.FIRST_NAME), trim(AUTHOR.LAST_NAME)))
+                .from(AUTHOR)
+                .fetch();
+        final Record1<String> thirdRecord = result.get(2);
+        assertEquals("StephenKing", thirdRecord.value1());
     }
 }
