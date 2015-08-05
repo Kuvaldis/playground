@@ -5,6 +5,8 @@ buildscript {
     dependencies {
         classpath 'nu.studer:gradle-jooq-plugin:1.0.5'
         classpath 'com.h2database:h2:1.4.187'
+        classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
+        classpath 'pl.codelabs:gradle-flyway-jooq-plugin:1.1.0'
     }
     configurations.classpath {
         resolutionStrategy {
@@ -17,13 +19,20 @@ buildscript {
     }
 }
 
+apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'nu.studer.jooq'
+apply plugin: 'pl.codelabs.flywayJooq'
+
+flyway {
+    url = 'jdbc:h2:file:../library'
+    user = 'sa'
+}
 
 jooq {
     library(sourceSets.main) {
         jdbc {
             driver = 'org.h2.Driver'
-            url = 'jdbc:h2:./library'
+            url = 'jdbc:h2:file:../library'
             user = 'sa'
             password = ''
         }

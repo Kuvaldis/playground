@@ -1,0 +1,16 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.h2database:h2:1.4.187'
+        classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
+    }
+}
+
+apply plugin: 'org.flywaydb.flyway'
+
+flyway {
+    url = 'jdbc:h2:file:../library'
+    user = 'sa'
+}
