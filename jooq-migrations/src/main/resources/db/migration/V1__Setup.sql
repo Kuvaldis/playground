@@ -53,13 +53,13 @@ INSERT INTO author (id, first_name, last_name  , date_of_birth    , year_of_birt
   VALUES           (5 , 'Paulo'   , 'Coelho'   , DATE '1947-08-24', 1947         );
 
 INSERT INTO book (id, author_id, title         , published_in, language_id)
-  VALUES         (1 , 1        , '1984'        , 1948        , 1          );
+  VALUES         (1 , 4        , '1984'        , 1948        , 1          );
 INSERT INTO book (id, author_id, title         , published_in, language_id)
-  VALUES         (2 , 1        , 'Animal Farm' , 1945        , 1          );
+  VALUES         (2 , 4        , 'Animal Farm' , 1945        , 1          );
 INSERT INTO book (id, author_id, title         , published_in, language_id)
-  VALUES         (3 , 2        , 'O Alquimista', 1988        , 4          );
+  VALUES         (3 , 5        , 'O Alquimista', 1988        , 4          );
 INSERT INTO book (id, author_id, title         , published_in, language_id)
-  VALUES         (4 , 2        , 'Brida'       , 1990        , 2          );
+  VALUES         (4 , 5        , 'Brida'       , 1990        , 2          );
 
 -- INSERT INTO book_store VALUES ('Orell F?ssli');
 -- INSERT INTO book_store VALUES ('Ex Libris');

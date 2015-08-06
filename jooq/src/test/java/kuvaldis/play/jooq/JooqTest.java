@@ -1,5 +1,6 @@
 package kuvaldis.play.jooq;
 
+import kuvaldis.play.jooq.generated.public_.tables.Author;
 import kuvaldis.play.jooq.generated.public_.tables.Book;
 import org.jooq.*;
 import org.jooq.exception.DataAccessException;
@@ -92,5 +93,26 @@ public class JooqTest {
                 .columns(AUTHOR.ID, AUTHOR.LAST_NAME)
                 .values(6, "Kuvaldis")
                 .execute();
+    }
+
+    @Test
+    public void testComplexRequest() throws Exception {
+        final DSLContext context = context();
+        final Author a = AUTHOR.as("a");
+        final Book b = BOOK.as("b");
+        final Result<Record> result = context.select()
+                .from(a)
+                .join(b).on(a.ID.equal(b.AUTHOR_ID))
+                .where(a.YEAR_OF_BIRTH.greaterThan(1920)
+                .and(a.FIRST_NAME.equal("Paulo")))
+                .orderBy(b.TITLE)
+                .fetch();
+        assertEquals(2, result.size());
+        final Record firstRecord = result.get(0);
+        assertEquals(5, firstRecord.getValue(a.ID).intValue());
+        assertEquals(4, firstRecord.getValue(b.ID).intValue());
+        final Record secondRecord = result.get(1);
+        assertEquals(5, secondRecord.getValue(a.ID).intValue());
+        assertEquals(3, secondRecord.getValue(b.ID).intValue());
     }
 }
