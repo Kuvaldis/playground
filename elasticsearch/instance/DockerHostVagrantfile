@@ -1,0 +1,13 @@
+Vagrant.configure("2") do |config|
+  config.vm.provision "docker"
+ 
+  config.vm.provision "shell", inline: "ps aux | grep 'sshd:' | awk '{print $2}' | xargs kill"
+ 
+  config.vm.define "dockerhost-elasticsearch"
+  config.vm.box = "phusion/ubuntu-14.04-amd64"
+  config.vm.network "forwarded_port", guest: 9200, host: 9200
+ 
+  config.vm.provider :virtualbox do |vb|
+      vb.name = "dockerhost-elasticsearch"
+  end
+end

@@ -26,4 +26,5 @@ include 'spring-batch'
 include 'http'
 include 'jooq'
 include 'jooq-migrations'
+include 'elasticsearch'
 
