@@ -1,0 +1,3 @@
+# here the variables specific for a particular host. in our case it's example
+nginx:
+  - { sitename: 'www.example.com' }
