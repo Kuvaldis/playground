@@ -1,0 +1,43 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/trusty64"
+  config.ssh.insert_key = false
+
+  config.vm.define "webserver1-g1" do |w1g1|
+    w1g1.vm.provider :virtualbox do |v|
+      v.name = "ansible.simple.webserver1-g1"
+    end
+  end
+  config.vm.define "webserver2-g1" do |w2g1|
+    w2g1.vm.provider :virtualbox do |v|
+      v.name = "ansible.simple.webserver2-g1"
+    end
+  end
+
+  config.vm.define "webserver1-g2" do |w1g2|
+    w1g2.vm.provider :virtualbox do |v|
+      v.name = "ansible.simple.webserver1-g2"
+    end
+  end
+  config.vm.define "webserver2-g2" do |w2g2|
+    w2g2.vm.provider :virtualbox do |v|
+      v.name = "ansible.simple.webserver2-g2"
+    end
+  end
+
+  config.vm.define "db1" do |db1|
+    db1.vm.provider :virtualbox do |v|
+      v.name = "ansible.simple.db1"
+    end
+  end
+  config.vm.define "db2" do |db2|
+    db2.vm.provider :virtualbox do |v|
+      v.name = "ansible.simple.db2"
+    end
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "playbook/playbook.yml"
+    ansible.inventory_path = "playbook/hosts"
+  end
+
+end

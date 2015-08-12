@@ -1,3 +1,0 @@
-- hosts: WebServersG1
-  roles:
-    - webserversg1
