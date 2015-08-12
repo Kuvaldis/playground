@@ -1,0 +1,3 @@
+admins:
+  - { user: 'kuvaldis', shell: '/bin/zsh' }
+  - { user: 'pupkin', shell: '/bin/sh' }

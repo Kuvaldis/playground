@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: preconf }
+  - { role: nginx }

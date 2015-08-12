@@ -1,0 +1,9 @@
+- name: install nginx
+  apt: pkg=nginx
+
+- name: nginx config for sites
+  template: src=nginx_site_conf.j2 dest=/etc/nginx/sites-enabled/{{item.sitename}}
+  with_items:
+    - $nginx
+  notify:
+    - restart nginx

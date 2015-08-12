@@ -1,0 +1,4 @@
+- hosts: all
+  roles:
+    - preconf
+  tags: preconf
