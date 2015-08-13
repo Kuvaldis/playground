@@ -1,7 +1,7 @@
 # here you can describe all the tasks to run for role preconf
 - name: installing tools
   # module: module parameters. see http://docs.ansible.com/ansible/list_of_all_modules.html for the list of all modules
-  apt: pkg=$item # $item - an item from with_items list
+  apt: pkg={{item}} # $item - an item from with_items list
   with_items:
     - zsh
     - htop
@@ -15,11 +15,11 @@
     - facter
 
 - name: add admins
-  user: name={{item.user}} shell= {{item.shell}} groups=sudo
+  user: name={{item.user}} shell={{item.shell}} groups=sudo
   with_items:
-    - $admins
+    - "{{admins}}"
 
 - name: copy vimrc file
   copy: src=.vimrc dest=/home/{{item.user}}/.vimrc
   with_items:
-    - $admins
+    - "{{admins}}"
