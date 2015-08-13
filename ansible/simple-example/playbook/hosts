@@ -1,12 +1,12 @@
-[webserversg1]
-webserver1-g1
-webserver2-g1
-[webserversg2]
-webserver1-g2
-webserver2-g2
+[WebServersG1]
+webserver1-g1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222
+webserver2-g1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2223
+[WebServersG2]
+webserver1-g2 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2224
+webserver2-g2 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2225
 [DataBase]
-db1
-db2
+db1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2226
+db2 ansible_ssh_host=127.0.0.1 ansible_ssh_port=2227
 [WEB:children]
-webserversg1
-webserversg2
+WebServersG1
+WebServersG2
