@@ -1,43 +1,61 @@
 Vagrant.configure("2") do |config|
+
   config.vm.box = "ubuntu/trusty64"
   config.ssh.insert_key = false
 
+# private networking setup doesn't work for some reason
+
   config.vm.define "webserver1-g1" do |w1g1|
+    w1g1.ssh.port = 2222
+    w1g1.vm.network :forwarded_port, guest: 22, host: 2222, id: 'ssh'
+    w1g1.vm.network :forwarded_port, guest: 80, host: 8080
     w1g1.vm.provider :virtualbox do |v|
-      v.name = "ansible.simple.webserver1-g1"
+      v.name = "ansible.vagrant.webserver1-g1"
     end
   end
   config.vm.define "webserver2-g1" do |w2g1|
+    w2g1.ssh.port = 2223
+    w2g1.vm.network :forwarded_port, guest: 22, host: 2223, id: 'ssh'
+    w21g1.vm.network :forwarded_port, guest: 80, host: 8081
     w2g1.vm.provider :virtualbox do |v|
-      v.name = "ansible.simple.webserver2-g1"
+      v.name = "ansible.vagrant.webserver2-g1"
     end
   end
 
   config.vm.define "webserver1-g2" do |w1g2|
+    w1g2.ssh.port = 2224
+    w1g2.vm.network :forwarded_port, guest: 22, host: 2224, id: 'ssh'
     w1g2.vm.provider :virtualbox do |v|
-      v.name = "ansible.simple.webserver1-g2"
+      v.name = "ansible.vagrant.webserver1-g2"
     end
   end
   config.vm.define "webserver2-g2" do |w2g2|
+    w2g2.ssh.port = 2225
+    w2g2.vm.network :forwarded_port, guest: 22, host: 2225, id: 'ssh'
     w2g2.vm.provider :virtualbox do |v|
-      v.name = "ansible.simple.webserver2-g2"
+      v.name = "ansible.vagrant.webserver2-g2"
     end
   end
 
   config.vm.define "db1" do |db1|
+    db1.ssh.port = 2226
+    db1.vm.network :forwarded_port, guest: 22, host: 2226, id: 'ssh'
     db1.vm.provider :virtualbox do |v|
-      v.name = "ansible.simple.db1"
+      v.name = "ansible.vagrant.db1"
     end
   end
   config.vm.define "db2" do |db2|
+    db2.ssh.port = 2227
+    db2.vm.network :forwarded_port, guest: 22, host: 2227, id: 'ssh'
     db2.vm.provider :virtualbox do |v|
-      v.name = "ansible.simple.db2"
+      v.name = "ansible.vagrant.db2"
     end
   end
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "playbook/playbook.yml"
     ansible.inventory_path = "playbook/hosts"
+    ansible.sudo = true
   end
 
 end

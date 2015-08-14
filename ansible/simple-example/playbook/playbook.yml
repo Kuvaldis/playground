@@ -1,12 +1,10 @@
 - name: All hosts set up
   hosts: all
-  sudo: yes
   roles:
     - preconf
   tags: preconf
 
 - name: Set up web servers group1
-  hosts: webserversg1
-  sudo: yes
+  hosts: WebServersG1
   roles:
     - webserversg1
