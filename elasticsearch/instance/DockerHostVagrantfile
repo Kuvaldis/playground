@@ -6,7 +6,8 @@ Vagrant.configure("2") do |config|
   config.vm.define "dockerhost-elasticsearch"
   config.vm.box = "phusion/ubuntu-14.04-amd64"
   config.vm.network "forwarded_port", guest: 9200, host: 9200
- 
+  config.vm.network "forwarded_port", guest: 9300, host: 9300
+
   config.vm.provider :virtualbox do |vb|
       vb.name = "dockerhost-elasticsearch"
   end
