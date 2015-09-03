@@ -256,7 +256,7 @@ curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
     }
   }
 }'
-# group by age ranges and inside the groups group by gender with average ballance
+# group by age ranges and inside the groups group by gender with average balance
 curl -XPOST 'localhost:9200/bank/_search?pretty' -d '
 {
   "size": 0,
