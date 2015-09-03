@@ -1,0 +1,8 @@
+plugins {
+    id "info.solidsoft.pitest" version "1.1.4"
+}
+
+pitest {
+    targetClasses = ['kuvaldis.play.pitest.*']
+    mutators = ["INLINE_CONSTS"]
+}

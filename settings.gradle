@@ -27,4 +27,5 @@ include 'http'
 include 'jooq'
 include 'jooq-migrations'
 include 'elasticsearch'
+include 'pitest'
 
