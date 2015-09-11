@@ -1,0 +1,32 @@
+= Links
+:hardbreaks:
+
+== Some examples
+
+:hide-uri-scheme:
+http://asciidoctor.org
+
+Chat with other Asciidoctor users in the irc://irc.freenode.org/#asciidoctor[Asciidoctor IRC channel].
+
+Let's view the raw HTML of the link:view-source:asciidoctor.org[Asciidoctor homepage].
+
+// turns on role attrs etc.
+:linkattrs:
+
+// target blank
+Let's view the raw HTML of the link:asciidoctor.org[Asciidoctor homepage, window="_blank"].
+// the same
+Let's view the raw HTML of the link:asciidoctor.org[Asciidoctor homepage^].
+
+Chat with other Asciidoctor users in the irc://irc.freenode.org/#asciidoctor[Asciidoctor IRC channel] or on the http://discuss.asciidoctor.org/[*mailing list*^, role="green"].
+
+Lists examples page relative link:lists.html[*link*^]
+
+// removes id prefix
+:idprefix:
+
+The section <<dummy>> describes nothing.
+<<dummy, The dummy section>> describes nothing.
+
+== Dummy
+here is nothing

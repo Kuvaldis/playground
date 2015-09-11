@@ -1,0 +1,10 @@
+= Attributes example
+:hardbreaks:
+
+:appversion: 1.0.0
+
+The current version of the application is {appversion}.
+
+:fedpkg: https://apps.fedoraproject.org/packages/asciidoc
+
+Information about the AsciiDoc package in Fedora is found at {fedpkg}

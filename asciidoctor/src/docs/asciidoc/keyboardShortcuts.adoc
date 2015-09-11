@@ -1,0 +1,6 @@
+= Keyboard Shortcuts example
+:hardbreaks:
+
+:experimental:
+
+Press ctrl + - kbd:[Ctrl + -]

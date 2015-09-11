@@ -1,0 +1,8 @@
+= Footnotes example
+:hardbreaks:
+
+A statement.footnote:[Clarification about this statement.]
+
+A bold statement.footnoteref:[disclaimer,Opinions are my own.]
+
+Another bold statement.footnoteref:[disclaimer]

@@ -1,0 +1,9 @@
+= Images
+:hardbreaks:
+
+image::go.gif[]
+image::go.gif[Go]
+// with id, width etc.
+[[img-go]]
+image::go.gif[Go, 300, 200, link="http://asciidoctor.org/docs/asciidoc-writers-guide/#writing-in-asciidoc"]
+Press the image:go.gif[Save, title="Save"] button.

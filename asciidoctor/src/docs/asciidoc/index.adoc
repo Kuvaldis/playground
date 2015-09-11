@@ -1,0 +1,38 @@
+= Test
+:author: Test
+:toc2:
+:toclevels: 3
+// can also be :doctype: book
+:icons: font
+
+:leveloffset: +1
+
+include::admonitions.adoc[]
+
+include::attributes.adoc[]
+
+include::blocks.adoc[]
+
+include::diagrams.adoc[]
+
+include::emphasizes.adoc[]
+
+include::footnotes.adoc[]
+
+include::images.adoc[]
+
+include::linebreakers.adoc[]
+
+include::links.adoc[]
+
+include::lists.adoc[]
+
+include::replacements.adoc[]
+
+include::tables.adoc[]
+
+include::test.adoc[]
+
+include::keyboardShortcuts.adoc[]
+
+:leveloffset: -1

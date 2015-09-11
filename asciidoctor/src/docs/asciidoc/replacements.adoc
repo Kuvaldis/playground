@@ -1,0 +1,9 @@
+= Replacements
+:hardbreaks:
+
+== Textual symbols
+(C) - copyright
+(R) - registered
+(TM) - trademark
+ -- - em dash
+ => right double arrow

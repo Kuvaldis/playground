@@ -1,0 +1,31 @@
+= Emphasizes example
+:hardbreaks:
+
+==Quotes
+*bold text*
+**b**o**l**d letters
+_italic text_
+__i__t__a__lic letter__s__
+*_bold italic text_*
+**__b__**old i**__t__**alic letters
+`monospace text`
+Styled blue [blue]#word#
+
+\*This is not bold text*
+\\__here we need double \__
+\{two-semicolons} means ;;
+\&sect; means &sect;
+
+== Pass macro
+This is pass:[<u>underlined</u>] text
+[subs="verbatim,macros"]
+----
+I better not contain *bold* or _italic_ text.
+pass:quotes[But I should contain *bold* text.]
+----
+The markup pass:q[<u>underline *me*</u>] renders as underlined text and "`me`" is bold.
+pass:r[(C)] shows copyright sign
+pass:q[(C)] will not
+
+This is +++<u>underlined text</u>+++
+This +*literal*+ will appear as *literal*.

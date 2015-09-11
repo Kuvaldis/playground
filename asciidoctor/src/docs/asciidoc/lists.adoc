@@ -1,0 +1,118 @@
+= Lists
+:hardbreaks:
+
+== Unordered
+
+.Unordered list with three positions
+* First one
+* Guess what
+* I'm the last one
+
+// that works only for one level lists
+.Appears the same
+- First one
+- Guess what
+- I'm the last one
+
+// the end of list. or else they fuse
+
+* Apples
+* Oranges
+
+// the same. lists separator
+
+* Walnuts
+* Almonds
+
+.Several levels list (nested)
+* West wood maze
+** Maze heart
+*** Reflection pool
+** Secret exit
+* Untracked file in git repository
+
+//
+
+.Maximum levels list
+* level 1
+** level 2
+*** level 3
+**** level 4
+***** level 5
+****** level 6 is unavailable
+* level 1
+
+== Ordered lists
+
+.Todo list
+. Hello
+. World
+. Go to first
+
+.Steps
+. Step 1
+. Step 2
+.. Step 2a
+.. Step 2b
+. Step 3
+
+.Numbering scheme levels
+. arabic
+. loweralpha
+. lowerroman
+. upperalpha
+. upperroman
+
+.Override scheme list
+[lowerroman, start=5]
+. Five
+. Six
+[upperalpha]
+.. a
+.. b
+.. c
+. Seven
+
+== Labeled lists
+
+.Hardware
+CPU:: The brain of the computer.
+Hard drive:: Permanent storage for operating system and/or user files.
+RAM:: Temporarily stores information the CPU uses during operation.
+Keyboard:: Used to enter text or control items on the screen.
+Mouse:: Used to point to and select items on your computer screen.
+Monitor:: Displays information in visual form using text and graphics.
+
+.Hardware label content on the same line
+[horizontal]
+CPU:: The brain of the computer.
+Hard drive:: Permanent storage for operating system and/or user files.
+RAM:: Temporarily stores information the CPU uses during operation.
+Keyboard:: Used to enter text or control items on the screen.
+Mouse:: Used to point to and select items on your computer screen.
+Monitor:: Displays information in visual form using text and graphics.
+
+.Labeled list with ordered
+Dairy::
+* Milk
+* Eggs
+Bakery::
+* Bread
+Produce::
+* Bananas
+
+== Hybrid lists
+
+Item 1::
+    Sublist item 1:::
+        . Ordered list item 1
+            * A
+            * B
+        . Ordered list item 2
+            * A
+    Sublist item 2:::
+        * C
+        * D
+Item 2::
+    . 1
+    . 2

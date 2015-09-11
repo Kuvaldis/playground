@@ -1,0 +1,23 @@
+= Linebreakers example
+
+== Plus sign usage
+// that is a comment
+Rubies are red, +
+// new line if hardbreaks are switched off
+Topazes are blue.
+
+== %hardbreaks section
+[%hardbreaks]
+// doesn't work in idea 13 preview
+Ruby is red.
+Java is black.
+
+== Now without
+Ruby is red.
+Java is black.
+
+== Line Break Doc Title (to the rest of the document)
+:hardbreaks:
+
+Rubies are red,
+Topazes are blue.

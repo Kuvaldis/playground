@@ -1,0 +1,13 @@
+= Admonitions example
+// switch on the icons
+:icons: font
+
+NOTE: some note text
+
+TIP: don't forget to write important example
+
+IMPORTANT: that's important
+
+CAUTION: beware
+
+WARNING: ATTENTION!
