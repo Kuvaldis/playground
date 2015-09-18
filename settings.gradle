@@ -29,4 +29,5 @@ include 'jooq-migrations'
 include 'elasticsearch'
 include 'pitest'
 include 'asciidoctor'
+include 'vertx'
 

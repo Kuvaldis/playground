@@ -8,6 +8,7 @@ allprojects {
         }
     }
 
+    group = 'kuvaldis.play'
     version = '1.0'
 
     apply plugin: 'java'

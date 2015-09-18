@@ -1,0 +1,47 @@
+// can be run in Intellij like java io.vertx.core.Starter run kuvaldis.play.vertx.HelloWorldVerticle
+// or gradle run
+// or run fat jar
+
+version '1.0-SNAPSHOT'
+
+buildscript {
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.2'
+    }
+}
+
+ext {
+    vertxVersion = '3.0.0'
+    mainVerticle = 'kuvaldis.play.vertx.HelloWorldVerticle'
+}
+
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+dependencies {
+    compile "io.vertx:vertx-core:${vertxVersion}"
+    compile "io.vertx:vertx-codegen:${vertxVersion}"
+    testCompile "io.vertx:vertx-unit:${vertxVersion}"
+}
+
+mainClassName = 'io.vertx.core.Starter'
+run {
+    args = ["run", mainVerticle]
+}
+
+jar {
+    baseName = 'vertx'
+    manifest {
+        attributes 'Main-Verticle': mainVerticle
+    }
+}
+
+shadowJar {
+    classifier = 'full'
+
+    mergeServiceFiles {
+        include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+    }
+}
+
+build.dependsOn 'shadowJar'
