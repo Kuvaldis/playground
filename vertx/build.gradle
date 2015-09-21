@@ -21,6 +21,7 @@ apply plugin: 'com.github.johnrengelman.shadow'
 dependencies {
     compile "io.vertx:vertx-core:${vertxVersion}"
     compile "io.vertx:vertx-codegen:${vertxVersion}"
+    compile "io.vertx:vertx-web:${vertxVersion}"
     testCompile "io.vertx:vertx-unit:${vertxVersion}"
 }
 
