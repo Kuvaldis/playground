@@ -22,6 +22,7 @@ dependencies {
     compile "io.vertx:vertx-core:${vertxVersion}"
     compile "io.vertx:vertx-codegen:${vertxVersion}"
     compile "io.vertx:vertx-web:${vertxVersion}"
+    compile 'org.thymeleaf:thymeleaf:2.1.4.RELEASE'
     testCompile "io.vertx:vertx-unit:${vertxVersion}"
 }
 
