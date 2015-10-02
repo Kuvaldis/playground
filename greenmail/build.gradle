@@ -1,0 +1,31 @@
+buildscript {
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'war'
+    id 'nebula.provided-base' version '2.0.1'
+}
+
+apply plugin: 'spring-boot'
+
+bootRepackage {
+    mainClass = 'kuvaldis.play.greenmail.spring.Application'
+}
+
+ext {
+    springVersion = '1.2.3.RELEASE'
+}
+
+dependencies {
+    compile 'com.icegreen:greenmail:1.4.1'
+    compile 'com.icegreen:greenmail-spring:1.4.1'
+
+    compile("org.springframework.boot:spring-boot-starter-web:$springVersion") {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    compile("org.springframework.boot:spring-boot-starter-jetty:$springVersion")
+}
