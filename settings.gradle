@@ -31,4 +31,5 @@ include 'pitest'
 include 'asciidoctor'
 include 'vertx'
 include 'greenmail'
+include 'redis'
 

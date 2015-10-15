@@ -1,0 +1,17 @@
+Vagrant.configure("2") do |config|
+    config.vm.box = "ubuntu/trusty64"
+
+    config.vm.define "redis-play" do |r|
+        r.vm.provision :shell, path: "bootstrap.sh"
+        r.vm.provision :file do |f|
+            f.source = "redis.conf"
+            f.destination = "~/redis/redis.conf"
+        end
+        r.vm.provision :shell, inline: "cp redis/redis.conf /etc/redis/redis.conf"
+        r.vm.provision :shell, path: "restart.sh"
+        r.vm.network :forwarded_port, guest: 6379, host: 6379
+        config.vm.provider :virtualbox do |vb|
+            vb.name = "redis-play"
+        end
+    end
+end
