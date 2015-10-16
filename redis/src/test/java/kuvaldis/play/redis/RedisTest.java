@@ -53,7 +53,10 @@ public class RedisTest {
     public void testPool() throws Exception {
         final JedisPool pool = new JedisPool(new JedisPoolConfig(), "localhost");
         try (final Jedis jedis = pool.getResource()) {
-//            jedis.set()
+            jedis.del("foo");
+            jedis.set("foo", "bar");
+            assertEquals("bar", jedis.get("foo"));
         }
+        pool.destroy();
     }
 }
