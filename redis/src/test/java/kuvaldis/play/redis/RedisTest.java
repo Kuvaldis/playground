@@ -4,12 +4,16 @@ import org.junit.Test;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisPubSub;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -58,5 +62,40 @@ public class RedisTest {
             assertEquals("bar", jedis.get("foo"));
         }
         pool.destroy();
+    }
+
+    @Test
+    public void testPubSub() throws Exception {
+        final CountDownLatch testLatch = new CountDownLatch(1);
+        final CountDownLatch subscribeLatch = new CountDownLatch(1);
+        final String[] result = new String[2];
+        final JedisPubSub jedisPubSub = new JedisPubSub() {
+
+            @Override
+            public void onSubscribe(String channel, int subscribedChannels) {
+                subscribeLatch.countDown();
+            }
+
+            @Override
+            public void onMessage(String channel, String message) {
+                result[0] = channel;
+                result[1] = message;
+                testLatch.countDown();
+            }
+        };
+        new Thread(() -> {
+            final Jedis jedis = new Jedis("localhost");
+            jedis.subscribe(jedisPubSub, "channel");
+            jedis.quit();
+        }).start();
+        subscribeLatch.await();
+        new Thread(() -> {
+            final Jedis jedis = new Jedis("localhost");
+            jedis.publish("channel", "ping");
+            jedis.quit();
+        }).start();
+        testLatch.await();
+        jedisPubSub.unsubscribe();
+        assertArrayEquals(new String[]{"channel", "ping"}, result);
     }
 }
