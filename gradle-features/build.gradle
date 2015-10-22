@@ -18,3 +18,6 @@ task first << {
 task second(dependsOn: [first]) << {
     println 'second'
 }
+
+// continuous build is available from version 2.5 and is run with 'gradle -t <task name>'
+// gradle -t test
