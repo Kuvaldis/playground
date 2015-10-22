@@ -14,8 +14,6 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-
     sourceSets {
         test {
             output.resourcesDir = output.classesDir
@@ -31,4 +29,8 @@ allprojects {
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.11'
     }
+}
+
+configure(subprojects - project(':gradle-features')) {
+    sourceCompatibility = JavaVersion.VERSION_1_8
 }

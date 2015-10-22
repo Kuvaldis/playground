@@ -1,0 +1,20 @@
+// create new task
+task helloWorld << {
+    println 'Hello world.'
+}
+
+// word1 and word2 are params passed with -P or --project-prop flags
+// gradle showArgs -Pword1=hello --project-prop word2=world
+task showArgs << {
+    println "$word1 $word2"
+}
+
+task first << {
+    println 'first'
+}
+
+// with -x or --exclude-task you can exclude dependent tasks from run
+// gradle second -x first
+task second(dependsOn: [first]) << {
+    println 'second'
+}

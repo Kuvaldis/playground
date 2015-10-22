@@ -33,4 +33,5 @@ include 'vertx'
 include 'greenmail'
 include 'redis'
 include 'hibernate'
+include 'gradle-features'
 
