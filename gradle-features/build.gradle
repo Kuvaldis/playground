@@ -59,3 +59,24 @@ def loadConfiguration() {
     def config = new ConfigSlurper(environment).parse(configFile.toURL())
     project.ext.set 'config', config
 }
+
+ext {
+    outputFile = file("$buildDir/version.txt")
+}
+
+task generateVersionFile << {
+    if (!outputFile.isFile()) {
+        outputFile.parentFile.mkdirs()
+        outputFile.createNewFile()
+    }
+    outputFile.write "Version: $version"
+}
+configure(generateVersionFile) {
+    inputs.property "version", version
+    outputs.files outputFile
+}
+
+task showContents << {
+    println outputFile.text
+}
+showContents.dependsOn generateVersionFile
