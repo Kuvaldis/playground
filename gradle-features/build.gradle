@@ -1,11 +1,17 @@
 // create new task
-task helloWorld << {
+task helloWorld {
+    group = 'Playground'
+}
+helloWorld << {
     println 'Hello world.'
 }
 
 // word1 and word2 are params passed with -P or --project-prop flags
 // gradle showArgs -Pword1=hello --project-prop word2=world
-task showArgs << {
+task showArgs {
+    group = 'Playground'
+}
+showArgs << {
     println "$word1 $word2"
 }
 
@@ -15,7 +21,10 @@ task first << {
 
 // with -x or --exclude-task you can exclude dependent tasks from run
 // gradle second -x first
-task second(dependsOn: [first]) << {
+task second(dependsOn: [first]) {
+    group = 'Playground'
+}
+second << {
     println 'second'
 }
 
@@ -36,6 +45,9 @@ task printProps << {
     println "mail.port:       $config.mail.port"
     println "system.property: ${System.properties['system.property']}"
     println "simple.property: ${project['simple.property']}"
+}
+configure(printProps) {
+    group = 'Playground'
 }
 
 def loadConfiguration() {
