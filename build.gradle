@@ -34,3 +34,7 @@ allprojects {
 configure(subprojects - project(':gradle-features')) {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
+
+task createWrapper(type: Wrapper) {
+    gradleVersion = '2.8'
+}
