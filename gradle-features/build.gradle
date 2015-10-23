@@ -72,6 +72,7 @@ task generateVersionFile << {
     outputFile.write "Version: $version"
 }
 configure(generateVersionFile) {
+    group = 'Playground'
     inputs.property "version", version
     outputs.files outputFile
 }
@@ -79,4 +80,40 @@ configure(generateVersionFile) {
 task showContents << {
     println outputFile.text
 }
+configure(showContents) {
+    group = 'Playground'
+}
 showContents.dependsOn generateVersionFile
+
+task generateFileWithProperty(type: Generate) {
+    group = 'Playground'
+    testProperty = '2.0'
+    outputFile = file("$project.buildDir/property.txt")
+}
+
+task showProperty {
+    group = 'Playground'
+}
+showProperty << {
+    println generateFileWithProperty.outputFile.text
+}
+showProperty.dependsOn generateFileWithProperty
+
+class Generate extends DefaultTask {
+
+    @Input
+    String testProperty
+
+    @OutputFile
+    File outputFile
+
+    @TaskAction
+    void generate() {
+        def file = getOutputFile()
+        if (!file.isFile()) {
+            file.parentFile.mkdirs()
+            file.createNewFile()
+        }
+        file.write "Property: $testProperty"
+    }
+}
