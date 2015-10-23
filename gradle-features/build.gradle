@@ -21,3 +21,29 @@ task second(dependsOn: [first]) << {
 
 // continuous build is available from version 2.5 and is run with 'gradle -t <task name>'
 // gradle -t test
+
+// to profile tasks execution you can use --profile flag
+// gradle --profile test
+
+// you can load properties from external groovy files or from gradle.properties
+// gradle -Penv=test printProps
+
+loadConfiguration()
+
+task printProps << {
+    println "serverName:      $config.serverName"
+    println "mail.server:     $config.mail.server"
+    println "mail.port:       $config.mail.port"
+    println "system.property: ${System.properties['system.property']}"
+    println "simple.property: ${project['simple.property']}"
+}
+
+def loadConfiguration() {
+    def environment = hasProperty('env') ? env : 'dev'
+    project.ext.set 'environment', environment
+    println "Environment is set to $environment"
+
+    def configFile = file('externalConfig.groovy')
+    def config = new ConfigSlurper(environment).parse(configFile.toURL())
+    project.ext.set 'config', config
+}
