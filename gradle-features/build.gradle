@@ -133,3 +133,13 @@ task('filterCopy', type: Copy) {
     filter (ConcatFilter, prepend: file('src/main/resources/include/header.txt'))
     rename ~/(.*).template.(.*)/, '$1.$2' // rename with groovy regex
 }
+
+// duplicate files strategy
+// will perform copy but with a console message:
+// 'Encountered duplicate path "copy.txt" during copy operation configured with DuplicatesStrategy.WARN'
+task copyDuplicatesStrategyWarn(type: Copy) {
+    from 'src/main/resources/copy1'
+    from 'src/main/resources/copy2'
+    into "$buildDir/copy"
+    duplicatesStrategy = DuplicatesStrategy.WARN
+}
