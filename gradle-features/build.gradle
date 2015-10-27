@@ -200,3 +200,49 @@ tasks.withType(Zip) { task ->
     }
 }
 
+// extend configuration
+configurations {
+    // means provided is an extension of runtime
+    provided.extendsFrom compile
+    cxf // no parent, just a config
+}
+ext {
+    cxfVersion = '2.6.2'
+    cxfArtifacts = [
+            'cxf-tools-wsdlto-frontend-jaxws',
+            'cxf-tools-wsdlto-databinding-jaxb',
+            'cxf-tools-common',
+            'cxf-tools-wsdlto-core'
+    ]
+}
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.7'
+    // only for provided configuration, so neither compile nor runtime has this dependency
+    provided 'ch.qos.logback:logback-classic:1.1.2'
+    // all the cxf artifacts are added as dependencis for cxf config
+    cxfArtifacts.each { artifact ->
+        cxf "org.apache.cxf:$artifact:$cxfVersion"
+    }
+}
+// generates java classes from wsdl
+task wsdl2java(type: JavaExec) {
+    ext {
+        wsdlFile = 'src/wsdl/service-contract.wsdl'
+        outputDir = file("$buildDir/generated/cxf")
+    }
+    inputs.file file(wsdlFile)
+    outputs.dir outputDir
+    // Main Java class to invoke.
+    main = 'org.apache.cxf.tools.wsdlto.WSDLToJava'
+
+    // Set classpath to dependencies assigned
+    // to the cxf configuration, so no other dependencies are included
+    classpath = configurations.cxf
+
+    // Arguments to be passed to WSDLToJava.
+    args '-d', outputDir
+    args '-client'
+    args '-verbose'
+    args '-validate'
+    args wsdlFile
+}
