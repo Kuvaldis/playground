@@ -143,3 +143,38 @@ task copyDuplicatesStrategyWarn(type: Copy) {
     into "$buildDir/copy"
     duplicatesStrategy = DuplicatesStrategy.WARN
 }
+
+// live collections are created with filter() or matching() methods
+task allCompile << {
+    println 'All compile'
+}
+// findAll doesn't return a live collection, so it's basically empty
+allCompile.dependsOn project.tasks.findAll {
+    it.name.startsWith('compile')
+}
+task allCompile2 << {
+    println 'All compile version 2'
+}
+// if findAll is used inside dependsOn closure param, then it'll be called before execution
+// so in this particular case it emulates live collection effect
+allCompile2.dependsOn {
+    project.tasks.findAll {
+        it.name.startsWith('compile')
+    }
+}
+task allCopy << {
+    println 'All copy'
+}
+// matching returns a live collection, so even if there is no copy tasks right now, there will be some
+// if we add them later
+allCopy.dependsOn project.tasks.matching {
+    it.name.startsWith('copy')
+}
+5.times {
+    task "compile$it" << {
+        println 'Compile...'
+    }
+    task "copy$it" << {
+        println 'Copy...'
+    }
+}
