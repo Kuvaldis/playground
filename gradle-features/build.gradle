@@ -178,3 +178,25 @@ allCopy.dependsOn project.tasks.matching {
         println 'Copy...'
     }
 }
+
+// from java plugin you can create a checksum file for jar
+apply plugin: 'java'
+archivesBaseName = 'gradle-play'
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+task javadocJar(type: Jar, dependsOn: 'javadoc') { // javadoc from java plugin
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+artifacts {
+    archives sourceJar, javadocJar
+}
+// adds a checksum files for each file created from Zip tasks
+tasks.withType(Zip) { task ->
+    task.doLast {
+        ant.checksum file: it.archivePath
+    }
+}
+
