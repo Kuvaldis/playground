@@ -1,0 +1,3 @@
+This is just a simple text file. This line will not make it, because there is no G-word here.
+We show filtering capabilities of Gradle copy.
+This file is written by @author@ with Gradle version @gradleVersion@.

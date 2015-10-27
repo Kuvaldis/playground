@@ -117,3 +117,19 @@ class Generate extends DefaultTask {
         file.write "Property: $testProperty"
     }
 }
+
+import org.apache.tools.ant.filters.*
+task('filterCopy', type: Copy) {
+    from 'src/main/resources/templates'
+    into buildDir
+    include '**/*.txt'
+    filter { line ->
+        line.contains('Gradle') ? line : ''
+    }
+    filter (ReplaceTokens, tokens: [
+            author: 'kuvaldis',
+            gradleVersion: gradle.gradleVersion
+    ])
+    filter (ConcatFilter, prepend: file('src/main/resources/include/header.txt'))
+    rename ~/(.*).template.(.*)/, '$1.$2' // rename with groovy regex
+}
