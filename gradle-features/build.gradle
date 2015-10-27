@@ -254,5 +254,6 @@ test {
         showStandardStreams = true
         // start/passed events
         events 'started', 'passed'
+        exceptionFormat = 'full'
     }
 }
