@@ -118,7 +118,9 @@ class Generate extends DefaultTask {
     }
 }
 
-import org.apache.tools.ant.filters.*
+import org.apache.tools.ant.filters.ConcatFilter
+import org.apache.tools.ant.filters.ReplaceTokens
+
 task('filterCopy', type: Copy) {
     from 'src/main/resources/templates'
     into buildDir
@@ -126,11 +128,11 @@ task('filterCopy', type: Copy) {
     filter { line ->
         line.contains('Gradle') ? line : ''
     }
-    filter (ReplaceTokens, tokens: [
-            author: 'kuvaldis',
+    filter(ReplaceTokens, tokens: [
+            author       : 'kuvaldis',
             gradleVersion: gradle.gradleVersion
     ])
-    filter (ConcatFilter, prepend: file('src/main/resources/include/header.txt'))
+    filter(ConcatFilter, prepend: file('src/main/resources/include/header.txt'))
     rename ~/(.*).template.(.*)/, '$1.$2' // rename with groovy regex
 }
 
@@ -255,5 +257,19 @@ test {
         // start/passed events
         events 'started', 'passed'
         exceptionFormat = 'full'
+    }
+}
+// afterEvaluate method adds closure to be executed after the project is evaluated
+afterEvaluate {
+    configure(allProcessResourcesTasks()) {
+        filter(ReplaceTokens, tokens: [
+                version: project.version
+        ])
+    }
+}
+// returns all the tasks containing resource processing
+def allProcessResourcesTasks() {
+    sourceSets.processResourcesTaskName.collect {
+        tasks[it]
     }
 }
