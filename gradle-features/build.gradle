@@ -246,3 +246,13 @@ task wsdl2java(type: JavaExec) {
     args '-validate'
     args wsdlFile
 }
+
+// test output enable
+test {
+    testLogging {
+        // enables output from standard out or error streams
+        showStandardStreams = true
+        // start/passed events
+        events 'started', 'passed'
+    }
+}
