@@ -269,7 +269,23 @@ afterEvaluate {
 }
 // returns all the tasks containing resource processing
 def allProcessResourcesTasks() {
-    sourceSets.processResourcesTaskName.collect {
+    [sourceSets.main, sourceSets.test].processResourcesTaskName.collect {
         tasks[it]
     }
+}
+
+buildscript {
+    dependencies {
+        classpath 'org.ajoberstar:grgit:1.4.1'
+    }
+}
+
+ext {
+    // Open the Git repository in the parent directory.
+    git = org.ajoberstar.grgit.Grgit.open(file('../'))
+}
+
+task printGitInfo << {
+    println "Abbreviated id: ${git.head().abbreviatedId}"
+    println "Revision:       ${git.head().id}"
 }
