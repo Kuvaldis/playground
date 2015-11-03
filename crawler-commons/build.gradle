@@ -1,0 +1,3 @@
+dependencies {
+    compile 'com.google.code.crawler-commons:crawler-commons:0.5'
+}
