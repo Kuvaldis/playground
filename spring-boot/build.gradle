@@ -7,7 +7,6 @@ buildscript {
 plugins {
     id 'java'
     id 'war'
-    id 'nebula.provided-base' version '2.0.1'
 }
 apply plugin: 'spring-boot'
 
@@ -16,7 +15,7 @@ bootRepackage {
 }
 
 ext {
-    springVersion = '1.2.3.RELEASE'
+    springBootVersion = '1.3.0.RELEASE'
     lombokVersion = '1.16.4'
     h2Version = '1.4.187'
 }
@@ -28,26 +27,27 @@ processResources {
 }
 
 dependencies {
-    provided("org.projectlombok:lombok:$lombokVersion")
 
-    compile("org.springframework.boot:spring-boot-starter-web:$springVersion") {
+    compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
         exclude module: 'spring-boot-starter-tomcat'
     }
-    compile("org.springframework.boot:spring-boot-starter-jetty:$springVersion")
+    compile("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
     // enables jersey support instead of spring mvc
-//    compile("org.springframework.boot:spring-boot-starter-jersey:$springVersion") {
+//    compile("org.springframework.boot:spring-boot-starter-jersey:$springBootVersion") {
 //        exclude module: 'spring-boot-starter-tomcat'
 //    }
-    compile("org.springframework.boot:spring-boot-configuration-processor:$springVersion")
+    compile("org.springframework.boot:spring-boot-configuration-processor:$springBootVersion")
     // enables spring security
-    compile("org.springframework.boot:spring-boot-starter-security:$springVersion")
-    compile("org.springframework.boot:spring-boot-starter-data-jpa:$springVersion")
+    compile("org.springframework.boot:spring-boot-starter-security:$springBootVersion")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion")
 
-    compile("org.springframework.boot:spring-boot-starter-actuator:$springVersion")
+    compile("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
     // provides ssl connection to actuator management endpoints
-    compile("org.springframework.boot:spring-boot-starter-remote-shell:$springVersion")
+    compile("org.springframework.boot:spring-boot-starter-remote-shell:$springBootVersion")
+
+    compile("org.springframework.boot:spring-boot-devtools:$springBootVersion")
 
     runtime("com.h2database:h2:$h2Version")
 
-    testCompile("org.springframework.boot:spring-boot-starter-test:$springVersion")
+    testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
 }

@@ -12,7 +12,13 @@ public class GreetingsService {
     @Value("${greetings.suffix}")
     private String suffix;
 
+    // change even method signatures, then in Intellij Idea recompile, it'll reload application,
+    // but with optimization. Better use Spring boot plugin
     public String greetings() {
-        return String.format("Hello %s! %s", name, suffix);
+        return returnString();
+    }
+
+    private String returnString() {
+        return "aaa";
     }
 }

@@ -40,8 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
-                .and().csrf().disable().headers().frameOptions().disable()
-                .rememberMe().disable();
+                .and().csrf().disable().headers().frameOptions().disable();
 
     }
 

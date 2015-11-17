@@ -1,7 +1,5 @@
 package kuvaldis.play.springboot;
 
-import lombok.Data;
-
 import javax.persistence.*;
 
 @Entity
