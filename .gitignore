@@ -3,3 +3,13 @@ javassist/dump/
 javassist/javassist.iml
 playground.iml
 zookeeper/zookeeper.iml
+**/*.iml
+**/*.db
+**/.vagrant
+.idea
+.gradle
+classes
+**/build
+jooq/src/generated
+elasticsearch/instance
+vagrant/vagrant-docker-src/vertx-examples
