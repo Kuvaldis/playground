@@ -35,7 +35,7 @@ allprojects {
     }
 }
 
-configure(subprojects - project(':gradle-features')) {
+configure(subprojects) {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
