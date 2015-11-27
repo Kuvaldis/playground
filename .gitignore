@@ -11,5 +11,10 @@ zookeeper/zookeeper.iml
 classes
 **/build
 jooq/src/generated
-elasticsearch/instance
+elasticsearch/instance/.vagrant
+elasticsearch/instance/elasticsearch
 vagrant/vagrant-docker-src/vertx-examples
+*.log
+*.pid
+*.port
+.vertx/
