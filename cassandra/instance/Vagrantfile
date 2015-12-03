@@ -1,0 +1,18 @@
+CFG_MEMSIZE = "1000"
+CFG_IP = "10.211.54.10"
+
+Vagrant.configure(2) do |config|
+  config.vm.define :cassandra do |cassandra|
+    cassandra.vm.box = "hashicorp/precise64"
+    cassandra.vm.provider "vmware_fusion" do |v|
+      v.vmx["memsize"] = CFG_MEMSIZE
+    end
+    cassandra.vm.provider :virtualbox do |v|
+      v.name = "cassandra"
+      v.customize ["modifyvm", :id, "--memory", CFG_MEMSIZE]
+    end
+    cassandra.vm.network :private_network, ip: CFG_IP
+    cassandra.vm.hostname = "cassandra"
+    cassandra.vm.provision :shell, path: "install.sh"
+  end
+end
