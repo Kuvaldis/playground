@@ -13,17 +13,14 @@ if [ ! -d  "$CASSANDRA" ]; then
     tar xvzf $CASSANDRA-bin.tar.gz
 fi
 cd $CASSANDRA
+chown -R vagrant:vagrant /home/vagrant/$CASSANDRA
 
 # data and log directories
 if [ ! -d "/var/lib/cassandra" ]; then
     mkdir /var/lib/cassandra
-    chown -R $USER:$GROUP /var/lib/cassandra
+    chown -R vagrant:vagrant /var/lib/cassandra
 fi
 if [ ! -d "/var/log/cassandra" ]; then
     mkdir /var/log/cassandra
-    chown -R $USER:$GROUP /var/log/cassandra
+    chown -R vagrant:vagrant /var/log/cassandra
 fi
-
-# start cassandra
-cd ~/$CASSANDRA
-bin/cassandra
