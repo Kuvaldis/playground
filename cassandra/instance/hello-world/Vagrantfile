@@ -21,7 +21,7 @@ Vagrant.configure(2) do |config|
       f.source = "sample_users.csv"
       f.destination = "/home/vagrant/data/sample_users.csv"
     end
-    c.vm.provision :shell, path: "install.sh"
-    c.vm.provision :shell, path: "start.sh", privileged: false
+    c.vm.provision :shell, path: "../install_cassandra.sh"
+    c.vm.provision :shell, path: "../start_cassandra.sh", privileged: false
   end
 end

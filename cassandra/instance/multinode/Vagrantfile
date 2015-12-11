@@ -1,0 +1,35 @@
+CFG_MEMSIZE = "1000"
+NETWORK = "10.211.55."
+FIRST_IP = 100
+SERVER_COUNT = 4
+
+servers = []
+(0..SERVER_COUNT - 1).each do
+  [i]
+  name = 'cassandra-node' + i.to_s
+  ip = NETWORK + (FIRST_IP + i).to_s
+  servers << {'name' => name, 'ip' => ip}
+end
+
+Vagrant.configure("2") do |config|
+  # all the images from the same basic image
+  config.vm.box = "hashicorp/precise64"
+  servers.each do |server|
+    config.vm.define server['name'] do |c|
+      c.vm.hostname = server['name']
+      c.vm.network :private_network, ip : server['ip']
+      if server['name'] == 'cassandra-node0'
+        c.vm.provision :shell, path: "../install_opsc.sh"
+      else
+        c.vm.provision :shell, path: "../install_cassandra.sh"
+      end
+      c.vm.provider "vmware_fusion" do |v|
+        v.vmx["memsize"] = CFG_MEMSIZE
+      end
+      c.vm.provider :virtualbox do |v|
+        v.name = "cassandra"
+        v.customize ["modifyvm", :id, "--memory", CFG_MEMSIZE]
+      end
+    end
+  end
+end
