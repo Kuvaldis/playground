@@ -29,4 +29,5 @@ rootProject.name = 'playground'
 //include 'gradle-features'
 //include 'crawler-commons'
 //include 'gretty'
+include 'wro4j'
 
