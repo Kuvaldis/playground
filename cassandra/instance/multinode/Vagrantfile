@@ -1,11 +1,10 @@
 CFG_MEMSIZE = "1000"
 NETWORK = "10.211.55."
 FIRST_IP = 100
-SERVER_COUNT = 4
+SERVER_COUNT = 3 # would be better to have 3 cassandra nodes instead of 2, but it really slows down localhost
 
 servers = []
-(0..SERVER_COUNT - 1).each do
-  [i]
+(0..SERVER_COUNT - 1).each do |i|
   name = 'cassandra-node' + i.to_s
   ip = NETWORK + (FIRST_IP + i).to_s
   servers << {'name' => name, 'ip' => ip}
@@ -17,17 +16,20 @@ Vagrant.configure("2") do |config|
   servers.each do |server|
     config.vm.define server['name'] do |c|
       c.vm.hostname = server['name']
-      c.vm.network :private_network, ip : server['ip']
+      c.vm.network :private_network, ip: server['ip']
       if server['name'] == 'cassandra-node0'
-        c.vm.provision :shell, path: "../install_opsc.sh"
+        c.vm.provision :shell, path: "install_opsc.sh"
+        c.vm.provision :shell, path: "start_opsc.sh"
       else
-        c.vm.provision :shell, path: "../install_cassandra.sh"
+        c.vm.provision :shell, path: "install_java.sh"
+        c.vm.provision :shell, path: "install_cassandra.sh"
+        c.vm.provision :shell, path: "start_cassandra.sh"
       end
       c.vm.provider "vmware_fusion" do |v|
         v.vmx["memsize"] = CFG_MEMSIZE
       end
       c.vm.provider :virtualbox do |v|
-        v.name = "cassandra"
+        v.name = server['name']
         v.customize ["modifyvm", :id, "--memory", CFG_MEMSIZE]
       end
     end

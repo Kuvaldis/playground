@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # start cassandra
-CASSANDRA="apache-cassandra-3.0.0"
+CASSANDRA="apache-cassandra-3.1"
 cd /home/vagrant/$CASSANDRA
 if ps aux | grep "cassandra" | grep -v grep > /dev/null
 then

@@ -1,4 +1,12 @@
 #!/bin/bash
+cat > /etc/hosts <<EOF
+127.0.0.1       localhost
+10.211.55.100   cassandra-node0
+10.211.55.101   cassandra-node1
+10.211.55.102   cassandra-node2
+10.211.55.103   cassandra-node3
+EOF
+
 apt-get install python-software-properties -y
 add-apt-repository ppa:openjdk-r/ppa
 apt-get update
@@ -7,9 +15,9 @@ update-alternatives --config java
 update-alternatives --config javac
 
 # download cassandra
-CASSANDRA="apache-cassandra-3.0.0"
+CASSANDRA="apache-cassandra-3.1"
 if [ ! -d  "$CASSANDRA" ]; then
-    wget http://apache-mirror.rbc.ru/pub/apache/cassandra/3.0.0/$CASSANDRA-bin.tar.gz
+    wget http://apache-mirror.rbc.ru/pub/apache/cassandra/3.1/$CASSANDRA-bin.tar.gz
     tar xvzf $CASSANDRA-bin.tar.gz
 fi
 cd $CASSANDRA
