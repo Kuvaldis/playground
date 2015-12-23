@@ -10,6 +10,7 @@
 
     <modules>
         <module>citrus</module>
+        <module>ninjaframework</module>
     </modules>
 
 </project>
