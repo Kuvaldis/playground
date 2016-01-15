@@ -277,6 +277,7 @@ def allProcessResourcesTasks() {
 buildscript {
     dependencies {
         classpath 'org.ajoberstar:grgit:1.4.1'
+        classpath 'org.hidetake:gradle-ssh-plugin:1.1.4'
     }
 }
 
@@ -288,4 +289,24 @@ ext {
 task printGitInfo << {
     println "Abbreviated id: ${git.head().abbreviatedId}"
     println "Revision:       ${git.head().id}"
+}
+
+apply plugin: 'org.hidetake.ssh'
+
+remotes {
+    server {
+        host = 'some host here'
+        user = 'some user'
+        password = 'some password'
+        knownHosts = allowAnyHosts
+    }
+}
+
+task checkServer << {
+    ssh.run {
+        session(remotes.server) {
+            execute 'command'
+            put text: "test", into: 'some file'
+        }
+    }
 }
