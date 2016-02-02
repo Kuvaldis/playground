@@ -1,0 +1,58 @@
+<idea-plugin version="2">
+    <id>kuvaldis.play.ideaplugin</id>
+    <name>Hello world idea plugin</name>
+    <version>1.0</version>
+    <vendor email="kuvaldis@gmail.com">Kuvaldis Play</vendor>
+
+    <description>
+        Hello world plugin
+    </description>
+
+    <change-notes>
+        Initial version
+    </change-notes>
+
+    <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+    <idea-version since-build="131"/>
+
+    <!-- please see https://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <application-components>
+        <component>
+            <interface-class>kuvaldis.play.ideaplugin.TestApplicationComponent</interface-class>
+            <implementation-class>kuvaldis.play.ideaplugin.TestApplicationComponentImpl</implementation-class>
+        </component>
+    </application-components>
+
+    <project-components>
+        <component>
+            <interface-class>kuvaldis.play.ideaplugin.TestProjectComponent</interface-class>
+            <implementation-class>kuvaldis.play.ideaplugin.TestProjectComponentImpl</implementation-class>
+            <loadForDefaultProject/>
+        </component>
+    </project-components>
+
+    <actions>
+        <action class="kuvaldis.play.ideaplugin.TestAction" id="TestAction1" text="Test1">
+            <keyboard-shortcut first-keystroke="control alt shift A" keymap="$default"/>
+            <add-to-group group-id="ToolsMenu" anchor="after" relative-to-action="GenerateJavadoc"/>
+        </action>
+        <!-- adds action group before Help Menu-->
+        <group class="kuvaldis.play.ideaplugin.TestActionGroup" id="TestActionGroup" text="Test Group">
+            <action class="kuvaldis.play.ideaplugin.TestAction" id="TestAction2" text="Test2"/>
+            <separator/>
+            <!-- reference to existing action-->
+            <reference ref="EditorCopy"/>
+            <add-to-group group-id="MainMenu" relative-to-action="HelpMenu" anchor="before"/>
+        </group>
+    </actions>
+
+</idea-plugin>
