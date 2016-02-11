@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class ListOrObjectResultItemJsonDeserializerTest {
+public class ListOrObjectGenericJsonDeserializerTest {
 
     @Test
     public void testDeserialize() throws Exception {
