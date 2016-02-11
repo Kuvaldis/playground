@@ -35,7 +35,7 @@ allprojects {
     }
 }
 
-configure(subprojects - project(':idea-plugin')) {
+configure(subprojects) {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
