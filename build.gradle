@@ -42,3 +42,7 @@ configure(subprojects) {
 task createWrapper(type: Wrapper) {
     gradleVersion = '2.8'
 }
+
+task mainProjectTask(dependsOn: ':gradle-features:subprojectTask') << {
+    println 'mainProject'
+}

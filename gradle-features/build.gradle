@@ -310,3 +310,7 @@ task checkServer << {
         }
     }
 }
+
+task subprojectTask << {
+    println 'subprojectTask'
+}

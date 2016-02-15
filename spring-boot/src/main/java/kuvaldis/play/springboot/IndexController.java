@@ -10,10 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -57,6 +54,17 @@ public class IndexController {
     List<Person> addPerson() {
         personRepository.save(new Person(UUID.randomUUID().toString()));
         return people();
+    }
+
+    @RequestMapping(value = "/addToken/{token}/imei/{imei}", method = RequestMethod.POST)
+    public boolean setUserToken(@PathVariable("token") String token, @PathVariable("imei") String imei) {
+        boolean result = false;
+        try {
+            System.out.println("bla");
+        } catch (Exception e) {
+            System.out.println("Couldn't set token to database");
+        }
+        return result;
     }
 
     @RequestMapping(value = "/login")

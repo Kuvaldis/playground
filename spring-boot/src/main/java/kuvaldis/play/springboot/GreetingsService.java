@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class GreetingsService {
 
-    @Value("${greetings.name}")
-    private String name;
+//    @Value("${greetings.name}")
+//    private String name;
 
     @Value("${greetings.suffix}")
     private String suffix;
