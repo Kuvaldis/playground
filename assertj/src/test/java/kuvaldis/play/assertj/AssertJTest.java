@@ -1,6 +1,10 @@
 package kuvaldis.play.assertj;
 
+import org.assertj.core.api.JUnitSoftAssertions;
+import org.assertj.core.api.SoftAssertions;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,5 +55,29 @@ public class AssertJTest {
         assertThatThrownBy(() -> {
             throw new Exception("oops");
         }).isInstanceOf(Exception.class).hasMessage("oops");
+    }
+
+    @Test
+    public void testSoftAssertions() throws Exception {
+        final SoftAssertions softAssertions = new SoftAssertions();
+
+        final int age = 10;
+        final String name = "Garry";
+        softAssertions.assertThat(age).as("Has age").isEqualTo(10);
+        softAssertions.assertThat(name).as("Has name").isEqualTo("Garry");
+
+        // prints all the assertion failures at once
+        softAssertions.assertAll();
+    }
+
+    @Rule
+    public JUnitSoftAssertions softAssertions = new JUnitSoftAssertions();
+
+    @Test
+    public void testSoftAssertionsJunitRule() throws Exception {
+        final int age = 10;
+        final String name = "Garry";
+        softAssertions.assertThat(age).as("Has age").isEqualTo(10);
+        softAssertions.assertThat(name).as("Has name").isEqualTo("Garry");
     }
 }
