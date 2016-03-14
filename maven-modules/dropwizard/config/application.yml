@@ -1,0 +1,35 @@
+server:
+# should be tuned depending on load and actual hardware. Tuned now for Intel Core i5-2400 CPU 3.10GHz
+  minThreads: 10
+  maxThreads: 256
+# block acceptors if exceed
+  maxQueuedRequests: 1024
+  applicationConnectors:
+    - type: http
+      acceptorThreads: 1
+      selectorThreads: 4
+
+logging:
+  level: INFO
+
+database:
+  driverClass: org.h2.Driver
+  user: sa
+  password:
+  url: jdbc:h2:tcp://localhost/~/tc
+  maxWaitForConnection: 1s
+  validationQuery: "SELECT 1"
+  initialSize: 32
+  minSize: 32
+  maxSize: 64
+  checkConnectionWhileIdle: false
+  evictionInterval: 10s
+  minIdleTime: 1 minute
+
+cleanupOldRecordsJobEnabled: true
+cleanupOldRecordsJobThreads: 20
+# seconds
+cleanupOldRecordsJobInterval: 10
+cleanupUserViewLimitJobEnabled: true
+cleanupUserViewLimitJobThreads: 10
+cleanupUserViewLimitJobInterval: 20

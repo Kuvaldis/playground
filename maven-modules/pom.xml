@@ -11,6 +11,7 @@
     <modules>
         <module>citrus</module>
         <module>ninjaframework</module>
+        <module>dropwizard</module>
     </modules>
 
 </project>

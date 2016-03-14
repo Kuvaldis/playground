@@ -1,0 +1,19 @@
+<assembly>
+    <id>bundle</id>
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+    <fileSets>
+        <fileSet>
+            <directory>config</directory>
+            <outputDirectory/>
+        </fileSet>
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory/>
+            <includes>
+                <include>dropwizard-*.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>

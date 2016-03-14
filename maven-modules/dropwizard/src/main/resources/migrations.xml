@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="add user table" author="nfadin">
+        <createTable tableName="USER">
+            <column name="ID" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add user view table" author="nfadin">
+        <createTable tableName="USER_VIEW">
+            <column name="USER_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_VIEWER_ID" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VIEW_DATE_TIME" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add user view user id view date time index" author="nfadin">
+        <sql>
+            create index IDX_USER_VIEW_USER_ID_VIEW_DATE_TIME_DESC on USER_VIEW (USER_ID, VIEW_DATE_TIME desc);
+        </sql>
+    </changeSet>
+
+    <changeSet id="add user view date time index" author="nfadin">
+        <sql>
+            create index IDX_USER_VIEW_DATE_TIME_DESC on USER_VIEW (VIEW_DATE_TIME desc);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
