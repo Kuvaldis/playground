@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<People>
+    <!--comment should be ignored-->
+    <Person sex="M">
+        <Name>Bill Clinton</Name>
+        <Age>57</Age>
+    </Person>
+    <Person sex="F">
+        <Name>Hilary Clinton</Name>
+        <Age>45</Age>
+    </Person>
+</People>
