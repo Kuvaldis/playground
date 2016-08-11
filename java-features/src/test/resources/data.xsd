@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<xs:schema version="1.0"
+           xmlns="http://www.example.com"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.example.com"
+           elementFormDefault="qualified">
+
+    <xs:simpleType name="Customer_Type">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+
+    <xs:complexType name="Customers_Type">
+        <xs:sequence>
+            <xs:element name="Customer" type="Customer_Type"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Item_Type">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="count" type="xs:string"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="Items_Type">
+        <xs:sequence>
+            <xs:element name="Item" type="Item_Type" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Order_Type">
+        <xs:sequence>
+            <xs:element name="Customer" type="Customer_Type"/>
+            <xs:element name="Item" type="Item_Type" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Orders_Type">
+        <xs:all>
+            <xs:element name="Order" type="Order_Type"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="Data_Type">
+        <xs:sequence>
+            <xs:element name="Customers" type="Customers_Type"/>
+            <xs:element name="Items" type="Items_Type"/>
+            <xs:element name="Orders" type="Orders_Type"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="Data" type="Data_Type"/>
+</xs:schema>

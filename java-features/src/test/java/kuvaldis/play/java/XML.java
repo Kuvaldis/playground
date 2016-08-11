@@ -1,11 +1,14 @@
 package kuvaldis.play.java;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.w3c.dom.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
@@ -16,6 +19,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +31,9 @@ import java.util.Scanner;
 import static org.junit.Assert.assertEquals;
 
 public class XML {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void testDomParser() throws Exception {
@@ -75,6 +85,14 @@ public class XML {
         assertEquals(2, namesCapturer.names.size());
         assertEquals("Bill Clinton", namesCapturer.names.get(0));
         assertEquals("Hilary Clinton", namesCapturer.names.get(1));
+    }
+
+    @Test
+    public void testValidateXmlByXsd() throws Exception {
+        final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        final Schema schema = factory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream("data.xsd")));
+        final Validator validator = schema.newValidator();
+        validator.validate(new StreamSource(getClass().getClassLoader().getResourceAsStream("data.xml")));
     }
 
     private static class NamesCapturer extends DefaultHandler {

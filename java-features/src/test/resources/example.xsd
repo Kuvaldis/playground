@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.example.com"
+           elementFormDefault="unqualified">
+    <!--xs:string is predefined type-->
+    <xs:element name="age_as_string" type="xs:string"/>
+
+    <!--define element as new 'ad-hoc' type (Russian Doll approach)-->
+    <xs:element name="age_as_simple_type">
+        <xs:simpleType>
+            <xs:restriction base="xs:integer">
+                <xs:minInclusive value="0"/>
+                <xs:maxExclusive value="200"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+
+    <!--the same as previous but type is defined separately-->
+    <xs:simpleType name="age_as_simple_predefined_type">
+        <!--define restrictions for the type values (from 0 inclusive to 200 exclusive)-->
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"/>
+            <xs:maxExclusive value="200"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="age_as_predefined_simple_type" type="age_as_simple_predefined_type"/>
+
+    <xs:element name="car">
+        <xs:simpleType>
+            <!--enum type with a set of possible values-->
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="Audi"/>
+                <xs:enumeration value="Golf"/>
+                <xs:enumeration value="Lada"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+
+    <!--define complex type with nested elements-->
+    <xs:complexType name="lastname">
+        <!--define attribute-->
+        <xs:attribute name="lang" default="EN"/>
+        <xs:sequence>
+            <xs:element name="to" type="xs:string"/>
+            <xs:element name="from" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:attribute name="blue"/>
+    <xs:complexType name="eyeColorType">
+        <!--reference to predefined attribute with name "blue"-->
+        <xs:attribute ref="blue"/>
+        <xs:attribute name="light"/>
+    </xs:complexType>
+
+    <xs:element name="eyeColor" type="eyeColorType"/>
+    <xs:element name="Catalog">
+        <xs:complexType>
+            <xs:sequence>
+                <!--reference to predefined element (not type)-->
+                <xs:element ref="eyeColor"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="employee">
+        <!--any order of the elements in xml-->
+        <xs:all>
+            <xs:element name="firstname" type="xs:string"/>
+            <xs:element name="lastname" type="xs:string"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="anotherPerson">
+        <!--either employee element or member element-->
+        <xs:choice>
+            <xs:element name="employee" type="employee"/>
+            <xs:element name="member" type="xs:string"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="yetAnotherPerson">
+        <!--should be in a strict order-->
+        <xs:sequence>
+            <xs:element name="lastname" type="xs:string"/>
+            <xs:element name="firstname" type="xs:string"/>
+            <!--define how many times the element might occur in xml (from 0 to 10 here)-->
+            <xs:element name="child_name" type="xs:string" minOccurs="0" maxOccurs="10"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

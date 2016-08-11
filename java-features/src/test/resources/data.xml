@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Data xmlns="http://www.example.com"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.example.com data.xsd">
+    <Customers>
+        <Customer>John</Customer>
+    </Customers>
+    <Items>
+        <Item>Item1</Item>
+        <Item>Item2</Item>
+    </Items>
+    <Orders>
+        <Order>
+            <Customer>John</Customer>
+            <Item count="5">Item1</Item>
+            <Item count="2">Item2</Item>
+        </Order>
+    </Orders>
+</Data>
