@@ -23,7 +23,9 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -93,6 +95,37 @@ public class XML {
         final Schema schema = factory.newSchema(new StreamSource(getClass().getClassLoader().getResourceAsStream("data.xsd")));
         final Validator validator = schema.newValidator();
         validator.validate(new StreamSource(getClass().getClassLoader().getResourceAsStream("data.xml")));
+    }
+
+    @Test
+    public void testXslt() throws Exception {
+        final TransformerFactory factory = TransformerFactory.newInstance();
+        final Source xslt = new StreamSource(getClass().getClassLoader().getResourceAsStream("hello.xslt"));
+        final Transformer transformer = factory.newTransformer(xslt);
+
+        final Source text = new StreamSource(getClass().getClassLoader().getResourceAsStream("hello.xml"));
+        transformer.transform(text, new StreamResult(new File("hello-out.html")));
+
+        final String savedToFile = new Scanner(new File("hello-out.html")).useDelimiter("\\Z").next();
+        final String removeLineSeparators = savedToFile.replace("\n", "").replace("\r", "");
+        assertEquals("<html>" +
+                "<body>" +
+                "<h1>Hello, World!</h1>" +
+                "<div>from <i>An XSLT Programmer</i>" +
+                "</div>" +
+                "<table border=\"1\">" +
+                "<tr>" +
+                "<th>Name</th>" +
+                "</tr>" +
+                "<tr>" +
+                "<td>Mozart</td>" +
+                "</tr>" +
+                "<tr>" +
+                "<td>Mahler</td>" +
+                "</tr>" +
+                "</table>" +
+                "</body>" +
+                "</html>", removeLineSeparators);
     }
 
     private static class NamesCapturer extends DefaultHandler {
