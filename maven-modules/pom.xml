@@ -9,9 +9,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>citrus</module>
-        <module>ninjaframework</module>
-        <module>dropwizard</module>
+        <!--<module>citrus</module>-->
+        <!--<module>ninjaframework</module>-->
+        <!--<module>dropwizard</module>-->
+        <module>maven-plugin</module>
+        <module>use-maven-plugin</module>
     </modules>
 
 </project>
