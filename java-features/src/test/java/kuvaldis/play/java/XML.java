@@ -13,6 +13,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -87,6 +90,38 @@ public class XML {
         assertEquals(2, namesCapturer.names.size());
         assertEquals("Bill Clinton", namesCapturer.names.get(0));
         assertEquals("Hilary Clinton", namesCapturer.names.get(1));
+    }
+
+    @Test
+    public void testStaxParser() throws Exception {
+        final XMLInputFactory factory = XMLInputFactory.newFactory();
+        final XMLStreamReader reader = factory.createXMLStreamReader(getClass().getClassLoader().getResourceAsStream("test.xml"));
+        final List<String> names = new ArrayList<>();
+        boolean nameStarted = false;
+        String name = null;
+        while (reader.hasNext()) {
+            final int event = reader.next();
+            switch (event) {
+                case XMLStreamConstants.START_ELEMENT:
+                    if ("Name".equals(reader.getLocalName())) {
+                        nameStarted = true;
+                    }
+                    break;
+                case XMLStreamConstants.CHARACTERS:
+                    if (nameStarted) {
+                        name = reader.getText().trim();
+                    }
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (nameStarted) {
+                        names.add(name);
+                        name = null;
+                        nameStarted = false;
+                    }
+            }
+        }
+        assertEquals("Bill Clinton", names.get(0));
+        assertEquals("Hilary Clinton", names.get(1));
     }
 
     @Test
