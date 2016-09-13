@@ -59,4 +59,33 @@ public class Employee {
     public void setAddress(final Address address) {
         this.address = address;
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Employee employee = (Employee) o;
+
+        if (id != employee.id) return false;
+        if (Double.compare(employee.salary, salary) != 0) return false;
+        if (name != null ? !name.equals(employee.name) : employee.name != null) return false;
+        if (designation != null ? !designation.equals(employee.designation) : employee.designation != null)
+            return false;
+        return address != null ? address.equals(employee.address) : employee.address == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        temp = Double.doubleToLongBits(salary);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (designation != null ? designation.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        return result;
+    }
 }

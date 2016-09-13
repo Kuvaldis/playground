@@ -1,5 +1,7 @@
 package kuvaldis.play.java;
 
+import kuvaldis.play.java.xml.Address;
+import kuvaldis.play.java.xml.Employee;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -9,6 +11,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
@@ -26,9 +31,7 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -122,6 +125,48 @@ public class XML {
         }
         assertEquals("Bill Clinton", names.get(0));
         assertEquals("Hilary Clinton", names.get(1));
+    }
+
+    @Test
+    public void testJaxbMarshal() throws Exception {
+        final Employee employee = new Employee();
+        employee.setId(1);
+        employee.setName("Bill");
+        employee.setDesignation("What is it?");
+        employee.setSalary(100.5d);
+        employee.setAddress(new Address());
+        employee.getAddress().setLine1("The line");
+        employee.getAddress().setLine2("Doesn't matter");
+        employee.getAddress().setCity("Gravity Falls");
+        employee.getAddress().setState("Oregon");
+        employee.getAddress().setZipcode(12345L);
+
+        final StringWriter writer = new StringWriter();
+        final JAXBContext context = JAXBContext.newInstance(Employee.class);
+        final Marshaller marshaller = context.createMarshaller();
+//        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.marshal(employee, writer);
+        // @formatter:off
+        final String expected =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+                "<employee id=\"1\">" +
+                    "<name>Bill</name>" +
+                    "<salary>100.5</salary>" +
+                    "<designation>What is it?</designation>" +
+                    "<address>" +
+                        "<city>Gravity Falls</city>" +
+                        "<line1>The line</line1>" +
+                        "<line2>Doesn't matter</line2>" +
+                        "<state>Oregon</state>" +
+                        "<zipcode>12345</zipcode>" +
+                    "</address>" +
+                "</employee>";
+        // @formatter:on
+        assertEquals(expected, writer.toString());
+
+        final Unmarshaller unmarshaller = context.createUnmarshaller();
+        final Employee unmarshalledEmployee = (Employee) unmarshaller.unmarshal(new StringReader(expected));
+        assertEquals(employee, unmarshalledEmployee);
     }
 
     @Test
