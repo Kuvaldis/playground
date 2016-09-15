@@ -18,9 +18,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.events.XMLEvent;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -96,7 +98,7 @@ public class XML {
     }
 
     @Test
-    public void testStaxParser() throws Exception {
+    public void testStaxCursorApiParser() throws Exception {
         final XMLInputFactory factory = XMLInputFactory.newFactory();
         final XMLStreamReader reader = factory.createXMLStreamReader(getClass().getClassLoader().getResourceAsStream("test.xml"));
         final List<String> names = new ArrayList<>();
@@ -116,6 +118,38 @@ public class XML {
                     }
                     break;
                 case XMLStreamConstants.END_ELEMENT:
+                    if (nameStarted) {
+                        names.add(name);
+                        name = null;
+                        nameStarted = false;
+                    }
+            }
+        }
+        assertEquals("Bill Clinton", names.get(0));
+        assertEquals("Hilary Clinton", names.get(1));
+    }
+
+    @Test
+    public void testStaxIteratorApiParser() throws Exception {
+        final XMLInputFactory factory = XMLInputFactory.newFactory();
+        final XMLEventReader reader = factory.createXMLEventReader(getClass().getClassLoader().getResourceAsStream("test.xml"));
+        final List<String> names = new ArrayList<>();
+        boolean nameStarted = false;
+        String name = null;
+        while (reader.hasNext()) {
+            final XMLEvent xmlEvent = reader.nextEvent();
+            switch (xmlEvent.getEventType()) {
+                case XMLEvent.START_ELEMENT:
+                    if ("Name".equals(xmlEvent.asStartElement().getName().getLocalPart())) {
+                        nameStarted = true;
+                    }
+                    break;
+                case XMLEvent.CHARACTERS:
+                    if (nameStarted) {
+                        name = xmlEvent.asCharacters().getData();
+                    }
+                    break;
+                case XMLEvent.END_ELEMENT:
                     if (nameStarted) {
                         names.add(name);
                         name = null;
