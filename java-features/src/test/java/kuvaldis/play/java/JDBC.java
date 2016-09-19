@@ -5,6 +5,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.io.StringReader;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +21,7 @@ public class JDBC {
         final Connection connection = DriverManager.getConnection("jdbc:h2:~/test", "test", "");
         final Statement statement = connection.createStatement();
         statement.executeUpdate("DROP TABLE IF EXISTS test");
-        statement.executeUpdate("CREATE TABLE test(user VARCHAR(50), attrs ARRAY)");
+        statement.executeUpdate("CREATE TABLE test(user VARCHAR(50), attrs ARRAY, data CLOB, s VARCHAR(50))");
     }
 
     @Test
@@ -79,6 +82,7 @@ public class JDBC {
         preparedStatement.setString(1, "Bill Cipher");
         preparedStatement.setObject(2, new String[]{"yellow", "eye"});
         preparedStatement.execute();
+        preparedStatement.close();
 
         final Statement statement = connection.createStatement();
         final ResultSet resultSet = statement.executeQuery("SELECT attrs FROM test");
@@ -89,7 +93,62 @@ public class JDBC {
         assertEquals("eye", attributes[1]);
         statement.close();
 
-        preparedStatement.close();
         connection.close();
+    }
+
+    @Test
+    public void testClob() throws Exception {
+        final Connection connection = DriverManager.getConnection("jdbc:h2:~/test", "test", "");
+        final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO test(data) VALUES (?)");
+
+        preparedStatement.setClob(1, new StringReader("big data"));
+        preparedStatement.execute();
+        preparedStatement.close();
+
+        final Statement statement = connection.createStatement();
+        final ResultSet resultSet = statement.executeQuery("SELECT data FROM test");
+        resultSet.next();
+        final BufferedReader characterStream = new BufferedReader(resultSet.getCharacterStream(1));
+        final String readString = characterStream.readLine();
+        assertEquals("big data", readString);
+        statement.close();
+
+        connection.close();
+    }
+
+    @Test
+    public void testTransactionRollback() throws Exception {
+        final Connection connection = DriverManager.getConnection("jdbc:h2:~/test", "test", "");
+        connection.setAutoCommit(false);
+        final Statement statement = connection.createStatement();
+        statement.execute("INSERT INTO test(user, s) VALUES ('Bill', 'String 1')");
+        statement.close();
+        connection.commit();
+
+        final Statement statement1 = connection.createStatement();
+        final ResultSet resultSet1 = statement1.executeQuery("SELECT s FROM test WHERE user = 'Bill'");
+        resultSet1.next();
+        assertEquals("String 1", resultSet1.getString(1));
+        statement1.close();
+
+        final Savepoint savepoint = connection.setSavepoint();
+
+        final Statement statement2 = connection.createStatement();
+        statement2.executeUpdate("UPDATE test SET s = 'String 2' WHERE user = 'Bill'");
+        statement2.close();
+
+        final Statement statement3 = connection.createStatement();
+        final ResultSet resultSet2 = statement3.executeQuery("SELECT s FROM test WHERE user = 'Bill'");
+        resultSet2.next();
+        assertEquals("String 2", resultSet2.getString(1));
+        statement3.close();
+
+        connection.rollback(savepoint);
+
+        final Statement statement4 = connection.createStatement();
+        final ResultSet resultSet3 = statement4.executeQuery("SELECT s FROM test WHERE user = 'Bill'");
+        resultSet3.next();
+        assertEquals("String 1", resultSet3.getString(1));
+        statement4.close();
     }
 }
