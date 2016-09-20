@@ -68,6 +68,7 @@ public class Multithreading {
             results.add(executorService.submit(() -> {
                 try {
                     semaphore.acquire();
+                    // here only 2 threads may be run
                     if (semaphore.availablePermits() > 1) {
                         // will never reach it as maximum 2 threads may acquire semaphore lock and one of them is acquired by current thread
                         counter.incrementAndGet();
@@ -99,7 +100,30 @@ public class Multithreading {
                 latch.countDown();
             }).start();
         }
+        // will wait until all threads call countDown()
         latch.await();
+        assertEquals(5, counter.get());
+    }
+
+    @Test
+    public void testCyclicBarrier() throws Exception {
+        final int threadsNumber = 5;
+        final CyclicBarrier barrier = new CyclicBarrier(threadsNumber + 1);
+        final AtomicInteger counter = new AtomicInteger();
+        for (int i = 0; i < threadsNumber; i++) {
+            new Thread(() -> {
+                try {
+                    counter.incrementAndGet();
+                    // will wait until other threads reach this place
+                    barrier.await();
+                } catch (InterruptedException | BrokenBarrierException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+        // will wait for other threads either
+        barrier.await();
+
         assertEquals(5, counter.get());
     }
 }
