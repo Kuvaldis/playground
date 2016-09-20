@@ -87,4 +87,19 @@ public class Multithreading {
 
         assertEquals(0, counter.get());
     }
+
+    @Test
+    public void testCountDownLatch() throws Exception {
+        final int threadsNumber = 5;
+        final CountDownLatch latch = new CountDownLatch(threadsNumber);
+        final AtomicInteger counter = new AtomicInteger();
+        for (int i = 0; i < threadsNumber; i++) {
+            new Thread(() -> {
+                counter.incrementAndGet();
+                latch.countDown();
+            }).start();
+        }
+        latch.await();
+        assertEquals(5, counter.get());
+    }
 }
