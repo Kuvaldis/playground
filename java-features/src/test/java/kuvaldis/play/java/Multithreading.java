@@ -170,4 +170,40 @@ public class Multithreading {
 
         assertEquals(5, IntStream.of(values).sum());
     }
+
+    @Test
+    public void testForkJoinPool() throws Exception {
+        final AtomicInteger counter = new AtomicInteger();
+
+        class SumTask extends RecursiveTask<Integer> {
+
+            private final int workLoad;
+
+            private SumTask(final int workLoad) {
+                this.workLoad = workLoad;
+            }
+
+            @Override
+            protected Integer compute() {
+                if (workLoad < 16) {
+                    return workLoad;
+                }
+                counter.incrementAndGet();
+                final int firstWorkLoad = workLoad / 2;
+                final int secondWorkLoad = workLoad - firstWorkLoad;
+                System.out.println("Split on " + firstWorkLoad + " and " + secondWorkLoad);
+                final SumTask firstSubTask = new SumTask(firstWorkLoad);
+                final SumTask secondSubTask = new SumTask(secondWorkLoad);
+                // both tasks will be performed in parallel
+                firstSubTask.fork();
+                secondSubTask.fork();
+                return firstSubTask.join() + secondSubTask.join();
+            }
+        }
+
+        final ForkJoinPool forkJoinPool = new ForkJoinPool();
+        final ForkJoinTask<Integer> task = forkJoinPool.submit(new SumTask(100));
+        assertEquals(100, task.get().intValue());
+        assertEquals(7, counter.get());
+    }
 }
