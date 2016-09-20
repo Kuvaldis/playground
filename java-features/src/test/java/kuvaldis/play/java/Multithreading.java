@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
@@ -125,5 +126,48 @@ public class Multithreading {
         barrier.await();
 
         assertEquals(5, counter.get());
+    }
+
+    @Test
+    public void testPhaser() throws Exception {
+        final int threadsNumber = 5;
+        final int[] values = new int[]{0, 0, 0, 0, 0};
+        final Phaser phaser = new Phaser(threadsNumber) {
+
+            // will be called when all threads arrived
+            @Override
+            protected boolean onAdvance(final int phase, final int registeredParties) {
+                System.out.println(registeredParties);
+                return IntStream.of(values).sum() == threadsNumber;
+            }
+        };
+
+        class Run implements Runnable {
+
+            private final int i;
+
+            private Run(final int i) {
+                this.i = i;
+            }
+
+            @Override
+            public void run() {
+                values[i] = 1;
+                // will not wait for other threads
+                phaser.arrive();
+            }
+        }
+
+        // register current
+        phaser.register();
+
+        for (int i = 0; i < threadsNumber; i++) {
+            new Thread(new Run(i)).start();
+        }
+
+        // will wait for other threads
+        phaser.arriveAndAwaitAdvance();
+
+        assertEquals(5, IntStream.of(values).sum());
     }
 }
