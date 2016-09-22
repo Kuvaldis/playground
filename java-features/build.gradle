@@ -1,3 +1,5 @@
 dependencies {
     compile group: 'com.h2database', name: 'h2', version: '1.4.192'
+    // https://mvnrepository.com/artifact/simple-jndi/simple-jndi
+    compile group: 'simple-jndi', name: 'simple-jndi', version: '0.11.4.1'
 }
