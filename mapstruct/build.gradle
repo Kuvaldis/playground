@@ -1,0 +1,8 @@
+plugins {
+    id 'net.ltgt.apt' version '0.8'
+}
+
+dependencies {
+    compile group: 'org.mapstruct', name: 'mapstruct', version: '1.0.0.Final'
+    apt group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.0.0.Final'
+}
