@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    compile group: 'org.mapstruct', name: 'mapstruct', version: '1.0.0.Final'
-    apt group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.0.0.Final'
+    compile group: 'org.mapstruct', name: 'mapstruct', version: '1.1.0.CR1'
+    apt group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.1.0.CR1'
 }

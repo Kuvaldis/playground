@@ -5,14 +5,16 @@ public class Car {
     private String make;
     private int numberOfSeats;
     private CarType type;
+    private double price;
 
     public Car() {
     }
 
-    public Car(final String make, final int numberOfSeats, final CarType type) {
+    public Car(final String make, final int numberOfSeats, final CarType type, final double price) {
         this.make = make;
         this.numberOfSeats = numberOfSeats;
         this.type = type;
+        this.price = price;
     }
 
     public String getMake() {
@@ -27,6 +29,10 @@ public class Car {
         return type;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
     public void setMake(final String make) {
         this.make = make;
     }
@@ -37,5 +43,9 @@ public class Car {
 
     public void setType(final CarType type) {
         this.type = type;
+    }
+
+    public void setPrice(final double price) {
+        this.price = price;
     }
 }
