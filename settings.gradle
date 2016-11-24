@@ -34,5 +34,5 @@ rootProject.name = 'playground'
 //include 'jackson'
 //include 'assertj'
 //include 'junit'
-include 'mapstruct'
-
+//include 'mapstruct'
+include 'springframework'
