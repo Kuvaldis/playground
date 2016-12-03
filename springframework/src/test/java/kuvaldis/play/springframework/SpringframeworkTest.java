@@ -30,4 +30,13 @@ public class SpringframeworkTest {
         assertEquals("eve@malefactor.com", emailsChildBean.getEmails().getProperty("admin"));
         assertEquals("user@example.com", emailsChildBean.getEmails().getProperty("user"));
     }
+
+    @Test
+    public void testCreatePrototypeFromSingleton() throws Exception {
+        final CreatePrototypeFromSingleton.CommandManager manager = context.getBean(CreatePrototypeFromSingleton.CommandManager.class);
+        final String output1 = manager.process("hello");
+        assertEquals("Executed by (1): hello", output1);
+        final String output2 = manager.process("world");
+        assertEquals("Executed by (2): world", output2);
+    }
 }

@@ -26,4 +26,11 @@
             </props>
         </property>
     </bean>
+
+    <!-- create prototype on call from singleton -->
+    <bean id="command" class="kuvaldis.play.springframework.CreatePrototypeFromSingleton.Command" scope="prototype"/>
+    <bean id="commandManager" class="kuvaldis.play.springframework.CreatePrototypeFromSingleton.CommandManager">
+        <lookup-method name="createCommand" bean="command"/>
+    </bean>
+
 </beans>
