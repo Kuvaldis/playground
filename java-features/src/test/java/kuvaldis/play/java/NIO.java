@@ -52,7 +52,7 @@ public class NIO {
         buffer.clear();
         int bytesRead = fileChannel.read(buffer);
         assertEquals(data.getBytes().length, bytesRead);
-        // makes buffer ready to read
+        // makes buffer ready to read from the start
         buffer.flip();
         final char[] chars = new char[bytesRead];
         for (int i = 0; buffer.hasRemaining(); i++) {
