@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
     <bean id="coffeeConstructorBean" class="kuvaldis.play.springframework.CoffeeConstructorBean">
         <constructor-arg index="0" value="I have no idea"/>
         <constructor-arg index="1" value="Oracle"/>
@@ -31,6 +31,24 @@
     <bean id="command" class="kuvaldis.play.springframework.CreatePrototypeFromSingleton.Command" scope="prototype"/>
     <bean id="commandManager" class="kuvaldis.play.springframework.CreatePrototypeFromSingleton.CommandManager">
         <lookup-method name="createCommand" bean="command"/>
+    </bean>
+
+    <!-- use thread scoped bean from singleton with scoped proxy -->
+    <!-- register thread scope -->
+    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+        <property name="scopes">
+            <map>
+                <entry key="thread">
+                    <bean class="org.springframework.context.support.SimpleThreadScope"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    <bean id="second" class="kuvaldis.play.springframework.UseScopedProxy.Second" scope="thread">
+        <aop:scoped-proxy/>
+    </bean>
+    <bean id="first" class="kuvaldis.play.springframework.UseScopedProxy.First">
+        <property name="second" ref="second"/>
     </bean>
 
 </beans>

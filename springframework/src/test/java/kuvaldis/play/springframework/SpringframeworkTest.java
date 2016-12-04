@@ -1,9 +1,12 @@
 package kuvaldis.play.springframework;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
 
@@ -38,5 +41,20 @@ public class SpringframeworkTest {
         assertEquals("Executed by (1): hello", output1);
         final String output2 = manager.process("world");
         assertEquals("Executed by (2): world", output2);
+    }
+
+    @Test
+    public void testScopedProxy() throws Exception {
+        final ExecutorService executor1 = Executors.newSingleThreadExecutor();
+        final ExecutorService executor2 = Executors.newSingleThreadExecutor();
+
+        final UseScopedProxy.First first = context.getBean(UseScopedProxy.First.class);
+
+        final Future<Integer> future1 = executor1.submit(() -> first.getSecond().getValue());
+        assertEquals(1, future1.get().intValue());
+
+        final Future<Integer> future2 = executor2.submit(() -> first.getSecond().getValue());
+        assertEquals(2, future2.get().intValue());
+
     }
 }
