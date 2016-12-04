@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     <bean id="coffeeConstructorBean" class="kuvaldis.play.springframework.CoffeeConstructorBean">
         <constructor-arg index="0" value="I have no idea"/>
         <constructor-arg index="1" value="Oracle"/>
@@ -50,5 +51,30 @@
     <bean id="first" class="kuvaldis.play.springframework.UseScopedProxy.First">
         <property name="second" ref="second"/>
     </bean>
+
+    <!--custom qualifier-->
+    <context:annotation-config/>
+    <bean class="kuvaldis.play.springframework.qualifier.SimpleMovieCatalog">
+        <qualifier type="kuvaldis.play.springframework.qualifier.MovieQualifier">
+            <attribute key="format" value="VHS"/>
+            <attribute key="genre" value="comedy"/>
+        </qualifier>
+        <property name="movieName" value="Ace Ventura Pet Detective"/>
+    </bean>
+    <bean class="kuvaldis.play.springframework.qualifier.SimpleMovieCatalog">
+        <qualifier type="kuvaldis.play.springframework.qualifier.MovieQualifier">
+            <attribute key="format" value="DVD"/>
+            <attribute key="genre" value="action"/>
+        </qualifier>
+        <property name="movieName" value="Terminator"/>
+    </bean>
+    <bean class="kuvaldis.play.springframework.qualifier.SimpleMovieCatalog">
+        <qualifier type="kuvaldis.play.springframework.qualifier.MovieQualifier">
+            <attribute key="format" value="BLUERAY"/>
+            <attribute key="genre" value="drama"/>
+        </qualifier>
+        <property name="movieName" value="The Shawshank Redemption"/>
+    </bean>
+    <bean id="movieRecommender" class="kuvaldis.play.springframework.qualifier.MovieRecommender"/>
 
 </beans>

@@ -1,5 +1,6 @@
 package kuvaldis.play.springframework;
 
+import kuvaldis.play.springframework.qualifier.MovieRecommender;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -55,6 +56,13 @@ public class SpringframeworkTest {
 
         final Future<Integer> future2 = executor2.submit(() -> first.getSecond().getValue());
         assertEquals(2, future2.get().intValue());
+    }
 
+    @Test
+    public void testCustomQualifier() throws Exception {
+        final MovieRecommender bean = context.getBean(MovieRecommender.class);
+        assertEquals("Ace Ventura Pet Detective", bean.getComedy());
+        assertEquals("Terminator", bean.getAction());
+        assertEquals("The Shawshank Redemption", bean.getDrama());
     }
 }
