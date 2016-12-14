@@ -1,6 +1,7 @@
 package kuvaldis.play.springframework;
 
 import kuvaldis.play.springframework.qualifier.MovieRecommender;
+import kuvaldis.play.springframework.scoperesolver.ScopeResolverBean;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -64,5 +65,13 @@ public class SpringframeworkTest {
         assertEquals("Ace Ventura Pet Detective", bean.getComedy());
         assertEquals("Terminator", bean.getAction());
         assertEquals("The Shawshank Redemption", bean.getDrama());
+    }
+
+    @Test
+    public void testScopeResolver() throws Exception {
+        final ScopeResolverBean bean1 = context.getBean(ScopeResolverBean.class);
+        final ScopeResolverBean bean2 = context.getBean(ScopeResolverBean.class);
+        assertEquals(1, bean1.getCount());
+        assertEquals(2, bean2.getCount());
     }
 }
