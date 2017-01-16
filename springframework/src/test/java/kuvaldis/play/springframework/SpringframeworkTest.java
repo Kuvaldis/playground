@@ -2,15 +2,27 @@ package kuvaldis.play.springframework;
 
 import kuvaldis.play.springframework.qualifier.MovieRecommender;
 import kuvaldis.play.springframework.scoperesolver.ScopeResolverBean;
+import kuvaldis.play.springframework.validator.Address;
+import kuvaldis.play.springframework.validator.AddressValidator;
+import kuvaldis.play.springframework.validator.Customer;
+import kuvaldis.play.springframework.validator.CustomerValidator;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.ValidationUtils;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class SpringframeworkTest {
 
@@ -73,5 +85,27 @@ public class SpringframeworkTest {
         final ScopeResolverBean bean2 = context.getBean(ScopeResolverBean.class);
         assertEquals(1, bean1.getCount());
         assertEquals(2, bean2.getCount());
+    }
+
+    @Test
+    public void testNestedValidators() throws Exception {
+        // given
+        final Customer customer = new Customer("Henry VIII", 15, new Address("London, duh", ""));
+        final CustomerValidator customerValidator = new CustomerValidator(new AddressValidator());
+
+        // when
+        final BeanPropertyBindingResult errors = new BeanPropertyBindingResult(customer, "customer");
+        ValidationUtils.invokeValidator(customerValidator, customer, errors);
+
+        // then
+        assertEquals(2, errors.getErrorCount());
+        final FieldError fieldError1 = errors.getFieldError("address.addressLine2");
+        assertNotNull(fieldError1);
+        assertTrue(Stream.of(fieldError1.getCodes())
+                .anyMatch("required.customer.address.addressLine2"::equals));
+        final FieldError fieldError2 = errors.getFieldError("age");
+        assertNotNull(fieldError2);
+        assertTrue(Stream.of(fieldError2.getCodes())
+                .anyMatch("too.young.customer.age"::equals));
     }
 }
