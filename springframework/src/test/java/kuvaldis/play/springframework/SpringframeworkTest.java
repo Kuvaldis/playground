@@ -1,5 +1,6 @@
 package kuvaldis.play.springframework;
 
+import kuvaldis.play.springframework.propertyeditor.BeanWithPersons;
 import kuvaldis.play.springframework.qualifier.MovieRecommender;
 import kuvaldis.play.springframework.scoperesolver.ScopeResolverBean;
 import kuvaldis.play.springframework.validator.Address;
@@ -7,14 +8,14 @@ import kuvaldis.play.springframework.validator.AddressValidator;
 import kuvaldis.play.springframework.validator.Customer;
 import kuvaldis.play.springframework.validator.CustomerValidator;
 import org.junit.Test;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.ValidationUtils;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -107,5 +108,25 @@ public class SpringframeworkTest {
         assertNotNull(fieldError2);
         assertTrue(Stream.of(fieldError2.getCodes())
                 .anyMatch("too.young.customer.age"::equals));
+    }
+
+    @Test
+    public void testBeanWrapper() throws Exception {
+        final BeanWrapper customer = new BeanWrapperImpl(new Customer());
+        customer.setPropertyValue("name", "Sean");
+        customer.setPropertyValue("address", new Address());
+        customer.setPropertyValue("address.addressLine1", "Piedmont");
+
+        assertEquals("Sean", ((Customer) customer.getWrappedInstance()).getName());
+        assertEquals("Piedmont", ((Customer) customer.getWrappedInstance()).getAddress().getAddressLine1());
+    }
+
+    @Test
+    public void testPropertyEditor() throws Exception {
+        final BeanWithPersons bean = context.getBean(BeanWithPersons.class);
+        assertEquals("John", bean.getPerson1().getFirstName());
+        assertEquals("Doe", bean.getPerson1().getLastName());
+        assertEquals("Agent", bean.getPerson2().getFirstName());
+        assertEquals("Smith", bean.getPerson2().getLastName());
     }
 }

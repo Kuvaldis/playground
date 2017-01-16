@@ -79,4 +79,17 @@
 
     <context:component-scan base-package="kuvaldis.play.springframework.scoperesolver"
                             scope-resolver="kuvaldis.play.springframework.scoperesolver.MyScopeResolver"/>
+
+    <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+        <property name="customEditors">
+            <map>
+                <!-- the first editor is omitted since it's in the same package as bean class (Person1) -->
+                <entry key="kuvaldis.play.springframework.propertyeditor.Person2" value="kuvaldis.play.springframework.propertyeditor.user2editor.Person2Editor"/>
+            </map>
+        </property>
+    </bean>
+    <bean class="kuvaldis.play.springframework.propertyeditor.BeanWithPersons">
+        <property name="person1" value="John Doe"/>
+        <property name="person2" value="Agent Smith"/>
+    </bean>
 </beans>
