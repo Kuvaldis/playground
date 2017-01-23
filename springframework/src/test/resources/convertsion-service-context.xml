@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <!-- custom converters can be added as property-->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="kuvaldis.play.springframework.conversionservice.CustomConverter"/>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="beanWithListOfIntegers" class="kuvaldis.play.springframework.conversionservice.BeanWithListOfIntegers">
+        <property name="integers" value="1,2,3"/>
+    </bean>
+    <bean class="kuvaldis.play.springframework.conversionservice.BeanWithBeanWithSetOfStrings">
+        <!-- works only if custom converter is added above -->
+        <property name="bean" ref="beanWithListOfIntegers"/>
+    </bean>
+</beans>

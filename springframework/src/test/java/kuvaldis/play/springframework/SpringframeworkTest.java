@@ -1,5 +1,7 @@
 package kuvaldis.play.springframework;
 
+import kuvaldis.play.springframework.conversionservice.BeanWithBeanWithSetOfStrings;
+import kuvaldis.play.springframework.conversionservice.BeanWithListOfIntegers;
 import kuvaldis.play.springframework.propertyeditor.BeanWithPersons;
 import kuvaldis.play.springframework.qualifier.MovieRecommender;
 import kuvaldis.play.springframework.scoperesolver.ScopeResolverBean;
@@ -16,9 +18,11 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ValidationUtils;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SpringframeworkTest {
 
-    final ApplicationContext context = new ClassPathXmlApplicationContext("test-context.xml");
+    private final ApplicationContext context = new ClassPathXmlApplicationContext("test-context.xml");
 
     @Test
     public void testBeanPropertiesInitialization() throws Exception {
@@ -128,5 +132,19 @@ public class SpringframeworkTest {
         assertEquals("Doe", bean.getPerson1().getLastName());
         assertEquals("Agent", bean.getPerson2().getFirstName());
         assertEquals("Smith", bean.getPerson2().getLastName());
+    }
+
+    @Test
+    public void testConversionService() throws Exception {
+        final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("convertsion-service-context.xml");
+        final BeanWithListOfIntegers bean = context.getBean(BeanWithListOfIntegers.class);
+        assertEquals(Arrays.asList(1, 2, 3), bean.getIntegers());
+    }
+
+    @Test
+    public void testCustomConverter() throws Exception {
+        final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("convertsion-service-context.xml");
+        final BeanWithBeanWithSetOfStrings bean = context.getBean(BeanWithBeanWithSetOfStrings.class);
+        assertEquals(Stream.of("1", "2", "3").collect(Collectors.toSet()), bean.getBean().getStrings());
     }
 }
