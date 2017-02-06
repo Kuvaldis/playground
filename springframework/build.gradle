@@ -1,4 +1,9 @@
 dependencies {
     // https://mvnrepository.com/artifact/org.springframework/spring-context
     compile group: 'org.springframework', name: 'spring-context', version: '5.0.0.M3'
+
+    // for aop
+    compile group: 'org.aspectj', name: 'aspectjrt', version: '1.8.10'
+    compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.10'
+
 }

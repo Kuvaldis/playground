@@ -1,5 +1,7 @@
 package kuvaldis.play.springframework;
 
+import kuvaldis.play.springframework.aop.SomeService;
+import kuvaldis.play.springframework.aop.UsageTracked;
 import kuvaldis.play.springframework.conversionservice.BeanWithBeanWithSetOfStrings;
 import kuvaldis.play.springframework.conversionservice.BeanWithListOfIntegers;
 import kuvaldis.play.springframework.propertyeditor.BeanWithPersons;
@@ -146,5 +148,15 @@ public class SpringframeworkTest {
         final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("convertsion-service-context.xml");
         final BeanWithBeanWithSetOfStrings bean = context.getBean(BeanWithBeanWithSetOfStrings.class);
         assertEquals(Stream.of("1", "2", "3").collect(Collectors.toSet()), bean.getBean().getStrings());
+    }
+
+    @Test
+    public void testAopIntroduction() throws Exception {
+        final SomeService bean = context.getBean(SomeService.class);
+        bean.call();
+        bean.call();
+        bean.call();
+        final UsageTracked usageTracked = (UsageTracked) bean;
+        assertEquals(3, usageTracked.getCount());
     }
 }

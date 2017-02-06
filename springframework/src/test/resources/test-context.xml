@@ -92,4 +92,10 @@
         <property name="person1" value="John Doe"/>
         <property name="person2" value="Agent Smith"/>
     </bean>
+
+    <!-- AOP -->
+    <aop:aspectj-autoproxy/>
+
+    <bean id="someService" class="kuvaldis.play.springframework.aop.SomeService"/>
+    <bean class="kuvaldis.play.springframework.aop.IntroductionAspect"/>
 </beans>
