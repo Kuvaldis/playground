@@ -36,3 +36,5 @@ rootProject.name = 'playground'
 //include 'junit'
 //include 'mapstruct'
 include 'springframework'
+include 'immutables'
+
