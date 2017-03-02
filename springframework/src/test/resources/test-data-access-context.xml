@@ -31,7 +31,7 @@
 
     <tx:advice id="txAdvice" transaction-manager="txManager">
         <tx:attributes>
-            <tx:method name="get*" read-only="true"/>
+            <tx:method name="get*" read-only="true" no-rollback-for="kuvaldis.play.springframework.dataaccess.InstrumentNotFoundException"/>
             <tx:method name="*"/>
         </tx:attributes>
     </tx:advice>

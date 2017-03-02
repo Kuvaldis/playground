@@ -1,6 +1,7 @@
 package kuvaldis.play.springframework;
 
 import kuvaldis.play.springframework.dataaccess.FooService;
+import kuvaldis.play.springframework.dataaccess.InstrumentNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -88,5 +89,23 @@ public class SpringDataAccessTest {
 
         // then
         assertEquals(0, count);
+    }
+
+    @Test(expected = InstrumentNotFoundException.class)
+    public void testNoRollbackOnUncheckedExceptionIfSpecified() throws Exception {
+        // given
+        final FooService fooService = context.getBean("fooService", FooService.class);
+
+        // when
+        fooService.insertInstrument("str");
+        fooService.getInstrument();
+        final DataSource dataSource = context.getBean("dataSource", DataSource.class);
+        final Connection connection = DataSourceUtils.getConnection(dataSource);
+        final ResultSet resultSet2 = connection.createStatement().executeQuery("select data from test");
+        resultSet2.next();
+        final String instrument = resultSet2.getString(1);
+
+        // then
+        assertEquals("str", instrument);
     }
 }
