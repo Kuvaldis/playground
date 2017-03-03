@@ -39,4 +39,5 @@ include 'springframework'
 //include 'immutables'
 //include 'javaslang'
 //include 'streamex'
+//include 'streams-utils'
 
