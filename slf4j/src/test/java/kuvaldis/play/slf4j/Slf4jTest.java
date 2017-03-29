@@ -25,4 +25,10 @@ public class Slf4jTest {
         final Logger logger = LoggerFactory.getLogger(Slf4jTest.class);
         logger.info("Hello World"); // name would be print as a param of logging template, for instance when slf4j is bind to logback
     }
+
+    @Test
+    public void getRootLogger() throws Exception {
+        final Logger rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        rootLogger.info("bla");
+    }
 }
