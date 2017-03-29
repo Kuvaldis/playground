@@ -40,5 +40,6 @@ include 'springframework'
 //include 'javaslang'
 //include 'streamex'
 //include 'streams-utils'
-include 'slf4j'
+//include 'slf4j'
+include 'logback'
 
