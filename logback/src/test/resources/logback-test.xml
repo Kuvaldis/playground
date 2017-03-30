@@ -1,13 +1,29 @@
 <!-- debug="true" forces print info about logback configuration on start-->
 <!-- scan="true" defines if changes in this config should be tracked and reloaded if necessary. Careful! Affects performance-->
-<configuration debug="true" scan="true" scanPeriod="30 seconds">
+<!-- packagingData="true" enables jar name printing into each line of stack trace -->
+<configuration scan="true" scanPeriod="30 seconds" packagingData="true">
+
+    <!-- prints all status messages to console -->
+    <!--<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>-->
+
+    <!-- defines property (variable). system variables (-D) can be referenced anywhere in the config as well-->
+    <property name="SOME_PREFIX" value="Hello "/>
+    <!-- properties file from classpath -->
+    <property resource="log.properties"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- PatternLayoutEncoder by default -->
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg</pattern>
+            <pattern>${SOME_PREFIX} ${ANOTHER_PREFIX} %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg</pattern>
         </encoder>
     </appender>
+
+    <logger name="kuvaldis.play.logback.disablelog" level="ERROR" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <!-- will have INFO level. No appenders are specified, but STDOUT is inherited from parent. So every message with INFO level (not ERROR) or higher will be print to STDOUT -->
+    <logger name="kuvaldis.play.logback.disablelog.Enablelog" level="INFO"/>
 
     <root level="debug">
         <appender-ref ref="STDOUT"/>

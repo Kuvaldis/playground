@@ -3,6 +3,7 @@ package kuvaldis.play.logback;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.util.StatusPrinter;
+import kuvaldis.play.logback.disablelog.Enablelog;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,5 +32,10 @@ public class LogbackTest {
         ((ch.qos.logback.classic.Logger) packageLogger).setLevel(Level.INFO);
         final Logger logger = LoggerFactory.getLogger(LogbackTest.class);
         logger.debug("bla"); // level is inherited from parent, which has INFO logger level, so nothing is print
+    }
+
+    @Test
+    public void testAppenderInheritance() throws Exception {
+        new Enablelog().logMessage("bla"); // bla will be print, see config file for details why it's imprtant
     }
 }
