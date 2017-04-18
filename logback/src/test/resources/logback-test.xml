@@ -14,7 +14,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- PatternLayoutEncoder by default -->
         <encoder>
-            <pattern>${SOME_PREFIX} ${ANOTHER_PREFIX} %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg</pattern>
+            <pattern>${SOME_PREFIX} ${ANOTHER_PREFIX} ${NON-EXISTING-PREFIX:-Yeah!} %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg</pattern>
         </encoder>
     </appender>
 
@@ -24,6 +24,10 @@
 
     <!-- will have INFO level. No appenders are specified, but STDOUT is inherited from parent. So every message with INFO level (not ERROR) or higher will be print to STDOUT -->
     <logger name="kuvaldis.play.logback.disablelog.Enablelog" level="INFO"/>
+
+    <define name="definerLevel" class="kuvaldis.play.logback.definer.LogLevelDefiner"/>
+
+    <logger name="kuvaldis.play.logback.definer" level="${definerLevel}"/>
 
     <root level="debug">
         <appender-ref ref="STDOUT"/>

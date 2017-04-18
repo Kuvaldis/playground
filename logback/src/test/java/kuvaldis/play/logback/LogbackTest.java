@@ -3,6 +3,7 @@ package kuvaldis.play.logback;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.util.StatusPrinter;
+import kuvaldis.play.logback.definer.LogLevelDefiner;
 import kuvaldis.play.logback.disablelog.Enablelog;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -37,5 +38,13 @@ public class LogbackTest {
     @Test
     public void testAppenderInheritance() throws Exception {
         new Enablelog().logMessage("bla"); // bla will be print, see config file for details why it's imprtant
+    }
+
+    @Test
+    public void testDefiner() throws Exception {
+        // getPropertyValue is called once, not on each log event or something. So it does not give ability to dynamically change this value
+        LogLevelDefiner.LEVEL.set("DEBUG");
+        final Logger logger = LoggerFactory.getLogger("kuvaldis.play.logback.definer");
+        logger.debug("bla");
     }
 }
