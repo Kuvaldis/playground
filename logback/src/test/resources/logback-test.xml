@@ -33,6 +33,22 @@
         </encoder>
     </appender>
 
+    <appender name="SiftingAppenderExample" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>userId</key>
+            <defaultValue>unknown</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${userId}" class="ch.qos.logback.core.FileAppender">
+                <file>sifting-${userId}.log</file>
+                <append>false</append>
+                <layout class="ch.qos.logback.classic.PatternLayout">
+                    <pattern>%d [%thread] %level %mdc %logger{35} - %msg%n</pattern>
+                </layout>
+            </appender>
+        </sift>
+    </appender>
+
     <logger name="kuvaldis.play.logback.disablelog" level="ERROR" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
@@ -46,6 +62,10 @@
 
     <logger name="RollingFileAppenderExample" level="debug">
         <appender-ref ref="RollingFileAppenderExample"/>
+    </logger>
+
+    <logger name="SiftingAppenderExample" level="debug">
+        <appender-ref ref="SiftingAppenderExample"/>
     </logger>
 
     <root level="debug">

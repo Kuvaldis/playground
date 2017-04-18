@@ -8,6 +8,7 @@ import kuvaldis.play.logback.disablelog.Enablelog;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import static org.junit.Assert.assertEquals;
 
@@ -53,5 +54,15 @@ public class LogbackTest {
         final Logger logger = LoggerFactory.getLogger("RollingFileAppenderExample");
         // rolling happens every minute, so inside a folder there will be a file per minute
         logger.info("bla");
+    }
+
+    @Test
+    public void testSiftingAppender() throws Exception {
+        final Logger logger = LoggerFactory.getLogger("SiftingAppenderExample");
+        logger.debug("Unknown user message"); // goes to the file with unknown user
+        MDC.put("userId", "Alice");
+        logger.debug("Alice's message");
+        MDC.put("userId", "Bob");
+        logger.debug("Bob's message");
     }
 }
