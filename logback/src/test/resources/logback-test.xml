@@ -18,6 +18,21 @@
         </encoder>
     </appender>
 
+    <appender name="RollingFileAppenderExample" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>rollingFile.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rolling happens for each minute, stored in per month folders -->
+            <fileNamePattern>rollingFileAppenderExample/%d{yyyy-MM,aux}/rollingFile.%d{yyyy-MM-dd_HH-mm}.log</fileNamePattern>
+            <!-- archives will be kept for 10 days -->
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>10MB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <logger name="kuvaldis.play.logback.disablelog" level="ERROR" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
@@ -28,6 +43,10 @@
     <define name="definerLevel" class="kuvaldis.play.logback.definer.LogLevelDefiner"/>
 
     <logger name="kuvaldis.play.logback.definer" level="${definerLevel}"/>
+
+    <logger name="RollingFileAppenderExample" level="debug">
+        <appender-ref ref="RollingFileAppenderExample"/>
+    </logger>
 
     <root level="debug">
         <appender-ref ref="STDOUT"/>

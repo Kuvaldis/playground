@@ -47,4 +47,11 @@ public class LogbackTest {
         final Logger logger = LoggerFactory.getLogger("kuvaldis.play.logback.definer");
         logger.debug("bla");
     }
+
+    @Test
+    public void testRollingFileAppender() throws Exception {
+        final Logger logger = LoggerFactory.getLogger("RollingFileAppenderExample");
+        // rolling happens every minute, so inside a folder there will be a file per minute
+        logger.info("bla");
+    }
 }
