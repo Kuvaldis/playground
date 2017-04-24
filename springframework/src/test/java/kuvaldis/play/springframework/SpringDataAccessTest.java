@@ -2,6 +2,8 @@ package kuvaldis.play.springframework;
 
 import kuvaldis.play.springframework.dataaccess.FooService;
 import kuvaldis.play.springframework.dataaccess.InstrumentNotFoundException;
+import kuvaldis.play.springframework.dataaccess.object.Actor;
+import kuvaldis.play.springframework.dataaccess.object.ActorMappingQuery;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -30,6 +32,7 @@ public class SpringDataAccessTest {
         final DataSource dataSource = context.getBean("dataSource", DataSource.class);
         final Connection connection = DataSourceUtils.getConnection(dataSource);
         connection.createStatement().execute("CREATE TABLE test (data VARCHAR(255))");
+        connection.createStatement().execute("CREATE TABLE actor (id INT, first_name VARCHAR(255), last_name VARCHAR(255))");
         connection.close();
     }
 
@@ -38,6 +41,7 @@ public class SpringDataAccessTest {
         final DataSource dataSource = context.getBean("dataSource", DataSource.class);
         final Connection connection = DataSourceUtils.getConnection(dataSource);
         connection.createStatement().execute("DROP TABLE test");
+        connection.createStatement().execute("DROP TABLE actor");
         connection.close();
     }
 
@@ -107,5 +111,22 @@ public class SpringDataAccessTest {
 
         // then
         assertEquals("str", instrument);
+    }
+
+    @Test
+    public void testMappingSqlQuery() throws Exception {
+        // given
+        final DataSource dataSource = context.getBean("dataSource", DataSource.class);
+        dataSource.getConnection().createStatement()
+                .executeUpdate("INSERT INTO actor(id, first_name, last_name) VALUES (1, 'Vaas', 'Isdaas')");
+        final ActorMappingQuery actorMappingQuery = new ActorMappingQuery(dataSource);
+
+        // when
+        final Actor actor = actorMappingQuery.findObject("1");
+
+        // then
+        assertEquals(1, actor.getId());
+        assertEquals("Vaas", actor.getFirstName());
+        assertEquals("Isdaas", actor.getLastName());
     }
 }
