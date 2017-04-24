@@ -27,21 +27,12 @@ public class SpringDataAccessTest {
 
     private static final ApplicationContext context = new ClassPathXmlApplicationContext("test-data-access-context.xml");
 
-    @Before
-    public void setUp() throws Exception {
-        final DataSource dataSource = context.getBean("dataSource", DataSource.class);
-        final Connection connection = DataSourceUtils.getConnection(dataSource);
-        connection.createStatement().execute("CREATE TABLE test (data VARCHAR(255))");
-        connection.createStatement().execute("CREATE TABLE actor (id INT, first_name VARCHAR(255), last_name VARCHAR(255))");
-        connection.close();
-    }
-
     @After
     public void tearDown() throws Exception {
         final DataSource dataSource = context.getBean("dataSource", DataSource.class);
         final Connection connection = DataSourceUtils.getConnection(dataSource);
-        connection.createStatement().execute("DROP TABLE test");
-        connection.createStatement().execute("DROP TABLE actor");
+        connection.createStatement().execute("DELETE FROM test");
+        connection.createStatement().execute("DELETE FROM actor");
         connection.close();
     }
 
