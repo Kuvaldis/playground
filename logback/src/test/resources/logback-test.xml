@@ -68,6 +68,17 @@
         <appender-ref ref="SiftingAppenderExample"/>
     </logger>
 
+    <conversionRule conversionWord="millis"
+                    converterClass="kuvaldis.play.logback.converter.SampleConverter"/>
+    <appender name="SampleConverterAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%-6millis [%thread] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="SampleConverterExample" level="debug" additivity="false">
+        <appender-ref ref="SampleConverterAppender"/>
+    </logger>
+
     <root level="debug">
         <appender-ref ref="STDOUT"/>
     </root>

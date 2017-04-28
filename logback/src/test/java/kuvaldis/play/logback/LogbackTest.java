@@ -65,4 +65,10 @@ public class LogbackTest {
         MDC.put("userId", "Bob");
         logger.debug("Bob's message");
     }
+
+    @Test
+    public void testConverter() throws Exception {
+        final Logger logger = LoggerFactory.getLogger("SampleConverterExample");
+        logger.debug("bla");
+    }
 }
