@@ -71,4 +71,11 @@ public class LogbackTest {
         final Logger logger = LoggerFactory.getLogger("SampleConverterExample");
         logger.debug("bla");
     }
+
+    @Test
+    public void testFilter() throws Exception {
+        final Logger logger = LoggerFactory.getLogger("ImportantFilterExample");
+        logger.debug("Important: bla");
+        logger.debug("Forget about it"); // will be skipped
+    }
 }
