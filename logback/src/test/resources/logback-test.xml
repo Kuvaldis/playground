@@ -14,7 +14,9 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- PatternLayoutEncoder by default -->
         <encoder>
-            <pattern>${SOME_PREFIX} ${ANOTHER_PREFIX} ${NON-EXISTING-PREFIX:-Yeah!} %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg</pattern>
+            <pattern>${SOME_PREFIX} ${ANOTHER_PREFIX} ${NON-EXISTING-PREFIX:-Yeah!} %d{HH:mm:ss.SSS} [%thread] %-5level
+                %logger{36} - %msg
+            </pattern>
         </encoder>
     </appender>
 
@@ -22,7 +24,8 @@
         <file>rollingFile.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rolling happens for each minute, stored in per month folders -->
-            <fileNamePattern>rollingFileAppenderExample/%d{yyyy-MM,aux}/rollingFile.%d{yyyy-MM-dd_HH-mm}.log</fileNamePattern>
+            <fileNamePattern>rollingFileAppenderExample/%d{yyyy-MM,aux}/rollingFile.%d{yyyy-MM-dd_HH-mm}.log
+            </fileNamePattern>
             <!-- archives will be kept for 10 days -->
             <maxHistory>10</maxHistory>
             <totalSizeCap>10MB</totalSizeCap>
@@ -89,6 +92,15 @@
     </appender>
     <logger name="ImportantFilterExample" level="debug" additivity="false">
         <appender-ref ref="ImportantFilterAppender"/>
+    </logger>
+
+    <appender name="MDCDifferentThreadAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%X{client} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="MDCDifferentThreadAppenderExample" level="debug" additivity="false">
+        <appender-ref ref="MDCDifferentThreadAppender"/>
     </logger>
 
     <root level="debug">

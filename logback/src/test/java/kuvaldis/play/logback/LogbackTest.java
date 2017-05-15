@@ -10,6 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import static org.junit.Assert.assertEquals;
 
 public class LogbackTest {
@@ -77,5 +82,22 @@ public class LogbackTest {
         final Logger logger = LoggerFactory.getLogger("ImportantFilterExample");
         logger.debug("Important: bla");
         logger.debug("Forget about it"); // will be skipped
+    }
+
+    @Test
+    public void testMDCAnotherThread() throws Exception {
+        final Logger logger = LoggerFactory.getLogger("MDCDifferentThreadAppenderExample");
+        MDC.put("client", "Vasiliy");
+        final Map<String, String> copyOfContextMap = MDC.getCopyOfContextMap();
+        final ExecutorService executorService = Executors.newCachedThreadPool();
+        final Future<?> future1 = executorService.submit(() -> {
+            MDC.setContextMap(copyOfContextMap);
+            logger.debug("bla"); // will be 'Vasiliy - bla'
+        });
+        final Future<?> future2 = executorService.submit(() -> {
+            logger.debug("bla"); // will be ' - bla'
+        });
+        future1.get();
+        future2.get();
     }
 }
