@@ -37,4 +37,10 @@ public class SpringMVCTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$.name").value("Frank"));
     }
+
+    @Test
+    public void jspViewReturn() throws Exception {
+        this.mockMvc.perform(get("/jsp/test/"))
+                .andExpect(forwardedUrl("/views/jsp/test.jsp"));
+    }
 }

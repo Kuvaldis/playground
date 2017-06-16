@@ -12,6 +12,7 @@ dependencies {
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.6'
     compile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.2.0'
+    compile group: 'javax.servlet', name: 'jstl', version: '1.2'
 
     // for data access
     compile group: 'org.springframework', name: 'spring-tx', version: '5.0.0.M3'
