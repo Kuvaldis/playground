@@ -1,0 +1,13 @@
+[plantuml, "architecture-context-diagram", "png"]
+....
+@startuml
+title Plan System - System Context
+
+[Plan System\n\nUsed to calculate timetables for Users\naccording to their preferences] <<Software System>> as PlanSystem
+actor AnonymousUser
+actor RegisteredUser
+
+AnonymousUser --> PlanSystem : Creates account
+RegisteredUser --> PlanSystem : Performs log in, \nManages account, \nStores rules, \nWorks with calculated timetable, \netc.
+@enduml
+....
