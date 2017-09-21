@@ -42,5 +42,6 @@ rootProject.name = 'playground'
 //include 'streams-utils'
 //include 'slf4j'
 //include 'logback'
-include 'spring-security'
+//include 'spring-security'
+include 'spring-hateoas'
 
