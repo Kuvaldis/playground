@@ -43,5 +43,6 @@ rootProject.name = 'playground'
 //include 'slf4j'
 //include 'logback'
 //include 'spring-security'
-include 'spring-hateoas'
+//include 'spring-hateoas'
+include 'spring-restdoc'
 
