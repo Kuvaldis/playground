@@ -16,6 +16,11 @@ public class RestDocController {
         return "pong";
     }
 
+    @GetMapping("/simple-test")
+    public String simple() {
+        return "simple-test";
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(RestDocController.class, args);
     }
