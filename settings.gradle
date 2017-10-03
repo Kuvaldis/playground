@@ -44,5 +44,6 @@ rootProject.name = 'playground'
 //include 'logback'
 //include 'spring-security'
 //include 'spring-hateoas'
-include 'spring-restdoc'
+//include 'spring-restdoc'
+include 'liquibase'
 
