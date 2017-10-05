@@ -1,0 +1,23 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="without context" author="kuvaldis">
+        <createTable tableName="person">
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="insert billy" author="kuvaldis" context="billy">
+        <insert tableName="person">
+            <column name="name">billy</column>
+        </insert>
+    </changeSet>
+    <changeSet id="insert webby" author="kuvaldis" context="webby">
+        <insert tableName="person">
+            <column name="name">webby</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -20,10 +20,10 @@ public class DbManager {
         this.url = urlTemplate.replaceAll("\\$\\{dbName}", dbName);
     }
 
-    public void init(final String liquibaseFile) throws Exception {
+    public Liquibase create(final String liquibaseFile) throws Exception {
         final Connection connection = getConnection();
         final Liquibase liquibase = new Liquibase(liquibaseFile, new ClassLoaderResourceAccessor(), new JdbcConnection(connection));
-        liquibase.update("");
+        return liquibase;
     }
 
     public Connection getConnection() throws SQLException {
