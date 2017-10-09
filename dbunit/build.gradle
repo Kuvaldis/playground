@@ -1,0 +1,4 @@
+dependencies {
+    compile group: 'org.dbunit', name: 'dbunit', version: '2.5.4'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.196'
+}
