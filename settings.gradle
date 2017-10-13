@@ -46,5 +46,6 @@ rootProject.name = 'playground'
 //include 'spring-hateoas'
 //include 'spring-restdoc'
 //include 'liquibase'
-include 'dbunit'
+//include 'dbunit'
+include 'hibernate-validator'
 
