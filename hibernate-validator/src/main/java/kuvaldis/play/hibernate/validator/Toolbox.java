@@ -7,7 +7,7 @@ public class Toolbox {
 
     private final List<@NotNull String> tools;
 
-    public Toolbox(final List<@NotNull String> tools) {
+    public Toolbox(final List<String> tools) {
         this.tools = tools;
     }
 
