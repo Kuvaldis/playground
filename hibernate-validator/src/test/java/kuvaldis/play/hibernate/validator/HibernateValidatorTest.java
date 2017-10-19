@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HibernateValidatorTest {
 
@@ -21,7 +22,10 @@ public class HibernateValidatorTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        final ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+        final ValidatorFactory validatorFactory = Validation.byDefaultProvider()
+                .configure()
+                .addValueExtractor(new GearBoxValueExtractor())
+                .buildValidatorFactory();
         validator = validatorFactory.getValidator();
     }
 
@@ -48,11 +52,6 @@ public class HibernateValidatorTest {
     @Test
     public void testCustomContainer() throws Exception {
         // register value extractor first
-        final ValidatorFactory validatorFactory = Validation.byDefaultProvider()
-                .configure()
-                .addValueExtractor(new GearBoxValueExtractor())
-                .buildValidatorFactory();
-        final Validator validator = validatorFactory.getValidator();
         final Car car = createValidCar();
         car.setGearBox(new GearBox<>(new Gear.OldGear()));
         final Set<ConstraintViolation<Car>> violations = validator.validate(car);
@@ -60,6 +59,14 @@ public class HibernateValidatorTest {
         final ConstraintViolation<Car> violation = violations.iterator().next();
         assertEquals("Gear is not providing enough torque.", violation.getMessage());
         assertEquals("gearBox", violation.getPropertyPath().toString());
+    }
+
+    @Test
+    public void validateSingleProperty() throws Exception {
+        final Car car = createValidCar();
+        car.setLicensePlate("S");
+        final Set<ConstraintViolation<Car>> violations = validator.validateProperty(car, "manufacturer");
+        assertTrue(violations.isEmpty());
     }
 
     private Car createValidCar() {
