@@ -4,9 +4,10 @@ import kuvaldis.play.hibernate.validator.container.Gear;
 import kuvaldis.play.hibernate.validator.container.GearBox;
 import kuvaldis.play.hibernate.validator.container.MinTorque;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+import java.util.Collections;
+import java.util.List;
 
 public class Car {
 
@@ -19,6 +20,12 @@ public class Car {
 
     @Min(2)
     private int seatCount;
+
+    @AssertTrue(message = "The car has to pass the vehicle inspection first", groups = CarChecks.class)
+    private boolean passedVehicleInspection;
+
+    @Valid
+    private Driver driver;
 
     private GearBox<@MinTorque(100) Gear> gearBox;
 
@@ -53,4 +60,25 @@ public class Car {
     public void setGearBox(final GearBox<Gear> gearBox) {
         this.gearBox = gearBox;
     }
+
+    public boolean isPassedVehicleInspection() {
+        return passedVehicleInspection;
+    }
+
+    public void setPassedVehicleInspection(final boolean passedVehicleInspection) {
+        this.passedVehicleInspection = passedVehicleInspection;
+    }
+
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(final Driver driver) {
+        this.driver = driver;
+    }
+
+    public void drive(final @Max(75) int speedInKmh) {
+
+    }
+
 }
