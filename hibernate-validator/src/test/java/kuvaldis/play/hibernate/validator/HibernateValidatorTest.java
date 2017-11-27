@@ -10,6 +10,11 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import javax.validation.constraints.Max;
+import javax.validation.executable.ExecutableValidator;
+import javax.validation.groups.Default;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -69,12 +74,55 @@ public class HibernateValidatorTest {
         assertTrue(violations.isEmpty());
     }
 
+    @Test
+    public void validateInputParameter() throws Exception {
+        final Car car = createValidCar();
+        final Method drive = Car.class.getMethod("drive", int.class);
+        final Object[] parameterValues = {80};
+        final ExecutableValidator executableValidator = validator.forExecutables();
+        final Set<ConstraintViolation<Car>> violations = executableValidator.validateParameters(car, drive, parameterValues);
+        assertEquals(1, violations.size());
+        Class<? extends Annotation> constraintType = violations.iterator()
+                .next()
+                .getConstraintDescriptor()
+                .getAnnotation()
+                .annotationType();
+        assertEquals(Max.class, constraintType);
+    }
+
+    @Test
+    public void validateGroups() throws Exception {
+        final Car car = createValidCar();
+        car.setPassedVehicleInspection(false);
+        car.getDriver().setHasDrivingLicense(false);
+
+        Set<ConstraintViolation<Car>> violations = validator.validate(car);
+        assertEquals(0, violations.size());
+
+        violations = validator.validate(car, CarChecks.class);
+        assertEquals(1, violations.size());
+        assertEquals("The car has to pass the vehicle inspection first", violations.iterator().next().getMessage());
+
+        violations = validator.validate(car, DriverChecks.class);
+        assertEquals(1, violations.size());
+        assertEquals("You first have to pass the driving test", violations.iterator().next().getMessage());
+
+        car.setPassedVehicleInspection(true);
+        car.getDriver().setHasDrivingLicense(true);
+        assertEquals(0, validator.validate(car, Default.class, CarChecks.class, DriverChecks.class).size());
+    }
+
     private Car createValidCar() {
         final Car car = new Car();
         car.setManufacturer("Toyota");
         car.setLicensePlate("DD-AB-123");
         car.setSeatCount(4);
         car.setGearBox(new GearBox<>(new Gear(200)));
+        car.setPassedVehicleInspection(true);
+        final Driver driver = new Driver();
+        driver.setAge(21);
+        driver.setHasDrivingLicense(true);
+        car.setDriver(driver);
         return car;
     }
 }
