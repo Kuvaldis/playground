@@ -112,6 +112,15 @@ public class HibernateValidatorTest {
         assertEquals(0, validator.validate(car, Default.class, CarChecks.class, DriverChecks.class).size());
     }
 
+    @Test
+    public void testCustomCaseValidator() throws Exception {
+        final Car car = createValidCar();
+        car.setLicensePlate("dd-ab-123");
+        final Set<ConstraintViolation<Car>> violations = validator.validate(car);
+        assertEquals(1, violations.size());
+        assertEquals("Case mode must be UPPER.", violations.iterator().next().getMessage());
+    }
+
     private Car createValidCar() {
         final Car car = new Car();
         car.setManufacturer("Toyota");
