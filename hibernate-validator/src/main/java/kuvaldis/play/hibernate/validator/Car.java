@@ -3,6 +3,8 @@ package kuvaldis.play.hibernate.validator;
 import kuvaldis.play.hibernate.validator.container.Gear;
 import kuvaldis.play.hibernate.validator.container.GearBox;
 import kuvaldis.play.hibernate.validator.container.MinTorque;
+import kuvaldis.play.hibernate.validator.custom.CaseMode;
+import kuvaldis.play.hibernate.validator.custom.CheckCase;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -16,6 +18,7 @@ public class Car {
 
     @NotNull
     @Size(min = 2, max = 14)
+    @CheckCase(CaseMode.UPPER)
     private String licensePlate;
 
     @Min(2)
