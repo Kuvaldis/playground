@@ -4,10 +4,15 @@ import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -151,4 +156,62 @@ public class Java9Test {
         }
     }
 
+    @Test
+    public void testProcessHandle() throws Exception {
+        final ProcessHandle current = ProcessHandle.current();
+        printProcessInfo(current);
+        ProcessHandle.allProcesses()
+                .filter(ph -> ph.info().command().isPresent())
+                .limit(4)
+                .forEach(this::printProcessInfo);
+    }
+
+    private void printProcessInfo(final ProcessHandle current) {
+        System.out.println(current.pid());
+        final ProcessHandle.Info info = current.info();
+        System.out.println(info.command().orElse(""));
+        System.out.println("Args");
+        for (final String arg : info.arguments().orElseGet(() -> new String[]{})) {
+            System.out.println(arg);
+        }
+        System.out.println(info.commandLine().orElse(""));
+        System.out.println(info.startInstant()
+                .map(Instant::toString)
+                .orElse(null));
+        System.out.println(info.totalCpuDuration()
+                .orElse(Duration.ZERO).toMillis());
+        System.out.println(info.user().orElse("nobody"));
+    }
+
+    //    @Test
+    public void testCreateProcess() throws Exception {
+        final Process process = new ProcessBuilder("notepad.exe").start();
+        final ProcessHandle processHandle = process.toHandle();
+        final CompletableFuture<ProcessHandle> onExit = processHandle.onExit();
+        onExit.get();
+        onExit.thenAccept(ph -> System.out.println(ph.pid()));
+    }
+
+    @Test
+    public void testCompletableFuture() throws Exception {
+        final CompletableFuture<List<String>> future = CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(2000L);
+                return List.of("1", "2", "3");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return List.of();
+            }
+        });
+        future.completeOnTimeout(List.of("10"), 1, TimeUnit.SECONDS)
+                .thenAccept(System.out::println)
+                .get();
+    }
+
+    @Test
+    public void testAtomicReferenceArray() throws Exception {
+        final AtomicReferenceArray<String> array = new AtomicReferenceArray<>(new String[]{"1", "3", "3"});
+        array.compareAndExchange(1, "3", "2");
+        assertEquals("2", array.get(1));
+    }
 }
