@@ -1,0 +1,47 @@
+plugins {
+    id 'java-library'
+    id 'application'
+}
+
+dependencies {
+    implementation project(':theater')
+}
+
+ext.moduleName = 'kuvaldis.play.java9.app'
+
+// includes module name
+mainClassName = "$moduleName/kuvaldis.play.java9.app.Main"
+
+run {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                // Explicitly tell Java 9 to use the module.
+                '--module', mainClassName
+        ]
+        classpath = files()
+    }
+}
+
+startScripts {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        classpath = files()
+        defaultJvmOpts = [
+                // Set the module path to a platform-independent placeholder value
+                // which is later replaced in a platform-specific way for the *nix shell script and Windows .bat file.
+                '--module-path', 'APP_HOME_LIBS',
+                '--module', mainClassName
+        ]
+    }
+    doLast{
+        def bashFile = new File(outputDir, applicationName)
+        String bashContent = bashFile.text
+        bashFile.text = bashContent.replaceFirst('APP_HOME_LIBS', Matcher.quoteReplacement('$APP_HOME/lib'))
+
+        def batFile = new File(outputDir, applicationName + ".bat")
+        String batContent = batFile.text
+        batFile.text = batContent.replaceFirst('APP_HOME_LIBS', Matcher.quoteReplacement('%APP_HOME%\\lib'))
+    }
+}

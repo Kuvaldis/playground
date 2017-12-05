@@ -1,0 +1,9 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation project(':spectacle')
+}
+
+ext.moduleName = 'kuvaldis.play.java9.theater'

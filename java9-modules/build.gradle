@@ -1,0 +1,65 @@
+subprojects {
+    afterEvaluate {
+        repositories {
+            jcenter()
+        }
+
+        jar {
+            inputs.property("moduleName", moduleName)
+            manifest {
+                attributes('Automatic-Module-Name': moduleName)
+            }
+        }
+
+        compileJava {
+            inputs.property("moduleName", moduleName)
+            doFirst {
+                options.compilerArgs = [
+                        // --module-path is used to compile Java 9 module.
+                        // We here use everything from classpath, which is ok.
+                        '--module-path', classpath.asPath,
+                ]
+                classpath = files()
+            }
+        }
+
+        compileTestJava {
+            inputs.property("moduleName", moduleName)
+            doFirst {
+                options.compilerArgs = [
+                        '--module-path', classpath.asPath,
+                        // adds automatic junit module to the set of observable modules
+                        '--add-modules', 'junit',
+                        // declares that junit reads this module
+                        '--add-reads', "$moduleName=junit",
+                        // this one performs compile time patching, "inserting" test classes to the module, so everything within it is available for tests
+                        '--patch-module', "$moduleName=" + files(sourceSets.test.java.srcDirs).asPath,
+                ]
+                classpath = files()
+            }
+        }
+
+        test {
+            inputs.property("moduleName", moduleName)
+            doFirst {
+                jvmArgs = [
+                        '--module-path', classpath.asPath,
+                        // Use the special ALL-MODULE-PATH, because the main class of the JVM that is running the tests is
+                        // not part of a Java 9 module. It is Gradle’s test runner, so it declares no modules it needs to consume.
+                        // This argument makes all of the modules in the module path visible.
+                        '--add-modules', 'ALL-MODULE-PATH',
+                        '--add-reads', "$moduleName=junit",
+                        '--patch-module', "$moduleName=" + files(sourceSets.test.java.outputDir).asPath,
+                ]
+                classpath = files()
+            }
+        }
+    }
+}
+
+group 'kuvaldis.play.java9'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.9

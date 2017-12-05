@@ -1,0 +1,6 @@
+rootProject.name = 'java9-modules'
+include 'actors'
+include 'spectacle'
+include 'theater'
+include 'app'
+
