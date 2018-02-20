@@ -48,4 +48,6 @@ rootProject.name = 'playground'
 //include 'liquibase'
 //include 'dbunit'
 //include 'hibernate-validator'
-include 'java9-features'
+//include 'java9-features'
+include 'springfox'
+
