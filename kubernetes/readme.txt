@@ -6,3 +6,14 @@ kubectl run kubernetes-bootcamp --image=gcr.io/google-samples/kubernetes-bootcam
 
 Expose service
 kubectl expose deployment/kubernetes-bootcamp --type="NodePort" --port 8080
+
+Create smth (pod, deployment etc.) from file.
+kubectl create -f ./<file name>
+
+
+* Pods - your instances
+* Deployments - your deployment of pods
+* Services - your gateway to pods
+
+Print exposed service url (accessible from outside the cluster)
+minikube service <service name> --url
