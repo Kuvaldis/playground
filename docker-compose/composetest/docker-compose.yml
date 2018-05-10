@@ -1,0 +1,13 @@
+version: '3'
+services:
+  web:
+    # uses image built from Dockerfile from the current directory
+    build: .
+    # forwards exposed exposed port 5000 on the container to 5000 port in localhost
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+  redis:
+    # uses image pulled from the Docker Hub registry
+    image: "redis:alpine"
