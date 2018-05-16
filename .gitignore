@@ -15,6 +15,7 @@ elasticsearch/instance/.vagrant
 elasticsearch/instance/elasticsearch
 vagrant/vagrant-docker-src/vertx-examples
 *.log
+!elk/compose/filebeat/testdata/*
 *.pid
 *.port
 .vertx/
