@@ -1,0 +1,6 @@
+- pipeline.id: apache_log_pipeline
+  path.config: "/usr/share/logstash/pipeline/apache-pipeline.conf"
+  pipeline.workers: 1
+- pipeline.id: syslog_pipeline
+  path.config: "/usr/share/logstash/pipeline/syslog-pipeline.conf"
+  pipeline.workers: 1
