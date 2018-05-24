@@ -21,6 +21,7 @@ services:
     volumes:
       - ./logstash/config/:/usr/share/logstash/config/:ro
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./logstash/testdata:/usr/share/logstash/testdata
     ports:
       - "5000:5000"
     environment:

@@ -4,3 +4,6 @@
 - pipeline.id: syslog_pipeline
   path.config: "/usr/share/logstash/pipeline/syslog-pipeline.conf"
   pipeline.workers: 1
+- pipeline.id: multiline_pipeline
+  path.config: "/usr/share/logstash/pipeline/multiline-pipeline.conf"
+  pipeline.workers: 1
