@@ -49,5 +49,7 @@ rootProject.name = 'playground'
 //include 'dbunit'
 //include 'hibernate-validator'
 //include 'java9-features'
-include 'springfox'
+//include 'springfox'
+include 'microprofile'
+include 'microprofile'
 
