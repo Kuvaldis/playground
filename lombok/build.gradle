@@ -1,0 +1,9 @@
+plugins {
+    id 'net.ltgt.apt' version '0.10'
+}
+
+dependencies {
+    compile 'org.projectlombok:lombok:1.18.4'
+
+    apt 'org.projectlombok:lombok:1.18.4'
+}

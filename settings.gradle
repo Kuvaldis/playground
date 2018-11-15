@@ -50,6 +50,6 @@ rootProject.name = 'playground'
 //include 'hibernate-validator'
 //include 'java9-features'
 //include 'springfox'
-include 'microprofile'
-include 'microprofile'
+//include 'microprofile'
+include 'lombok'
 
