@@ -122,7 +122,7 @@
     <repositories>
         <repository>
             <id>consol-labs-release</id>
-            <url>http://labs.consol.de/maven/repository/</url>
+            <url>https://labs.consol.de/maven/repository/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -131,7 +131,7 @@
         </repository>
         <repository>
             <id>consol-labs-snapshots</id>
-            <url>http://labs.consol.de/maven/snapshots-repository/</url>
+            <url>https://labs.consol.de/maven/snapshots-repository/</url>
             <snapshots>
                 <!-- Policy: always, daily, interval:xxx (xxx=#minutes, 60*24*7=10080), never -->
                 <updatePolicy>interval:10080</updatePolicy>
@@ -146,7 +146,7 @@
         <pluginRepository>
             <id>central</id>
             <name>Maven Plugin Repository</name>
-            <url>http://repo1.maven.org/maven2</url>
+            <url>https://repo1.maven.org/maven2</url>
             <layout>default</layout>
             <snapshots>
                 <enabled>false</enabled>
@@ -157,7 +157,7 @@
         </pluginRepository>
         <pluginRepository>
             <id>consol-labs-release</id>
-            <url>http://labs.consol.de/maven/repository/</url>
+            <url>https://labs.consol.de/maven/repository/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -166,7 +166,7 @@
         </pluginRepository>
         <pluginRepository>
             <id>consol-labs-snapshots</id>
-            <url>http://labs.consol.de/maven/snapshots-repository/</url>
+            <url>https://labs.consol.de/maven/snapshots-repository/</url>
             <snapshots>
                 <updatePolicy>interval:10080</updatePolicy>
             </snapshots>
